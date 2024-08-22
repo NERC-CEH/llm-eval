@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import plotly.io as pio
 
-metrics = {"answer_relevancy", "answer_correctness", "context_precision"}
+metrics = {"answer_relevancy", "answer_correctness", "context_precision", "context_recall"}
 dummy_data = {metric: np.random.rand(100) for metric in metrics}
 df = pd.DataFrame(dummy_data)
 
