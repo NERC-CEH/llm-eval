@@ -3,4 +3,4 @@ pandas
 numpy
 kaleido
 dvc
-dvc[gdrive]
+dvc[s3]
