@@ -35,10 +35,12 @@ Once you have been granted `USER` access, log in through the [JASMIN Object Stor
 #### Configure Credentials
 Once you have access to the object store and have created a key you will need to setup your credentials:
 ```shell
-$ dvc remote modify --local myremote access_key_id <ACCES_KEY_ID>
-$ dvc remote modify --local myremote secret_access_key <KEY_SECRET>
+$ dvc remote modify --local jasmin access_key_id '<ACCES_KEY_ID>'
+$ dvc remote modify --local jasmin secret_access_key '<KEY_SECRET>'
 ```
-> Note the configuration for DVC is tracked in `.dvc/config` but your credentials should be stored in a seperate file (`.dvc/config.local`) which should not be tracked by version control to avoid secrets being leaked. Make sure to use `--local` when configuring credentials. 
+> **Note:** The configuration for DVC is tracked in `.dvc/config` but your credentials should be stored in a seperate file (`.dvc/config.local`) which should not be tracked by version control to avoid secrets being leaked. Make sure to use `--local` when configuring credentials.
+
+> **WARNING:** There appears to be a subtle bug in DVC credentials management where any kind of quote character `'"` in your secret key will invalidate your credentials and you will receive a `403: Forbidden` error when attempting to access the JASMIN object store. The only way I've found around this so far is to keep generating new access keys until you get one without any quote characters...
 
 ## Pulling data
 Assuming that configuration and credentials have been set up correctly you should now be able to pull the data that is tracked by DVC from the JASMIN object store. This is done using the `dvc pull` command.
