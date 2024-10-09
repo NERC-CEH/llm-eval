@@ -12,7 +12,7 @@ dependencies = [
     "vllm",
     "bitsandbytes",
     "haystack-ai",
-    "vllm-haystack",
+    "accelerate",
 ]
 
 [project.optional-dependencies]
