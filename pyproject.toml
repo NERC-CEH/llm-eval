@@ -1,0 +1,22 @@
+[project]
+name = "llm-eval"
+dynamic = ["version"]
+
+dependencies = [
+    "plotly",
+    "pandas",
+    "numpy",
+    "kaleido",
+    "dvc",
+    "dvc[s3]",
+    "vllm",
+    "bitsandbytes",
+    "haystack-ai",
+    "accelerate",
+]
+
+[project.optional-dependencies]
+jupyter = [
+    "ipykernel",
+    "ipywidgets",
+]

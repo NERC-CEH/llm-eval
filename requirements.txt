@@ -1,6 +1,0 @@
-plotly
-pandas
-numpy
-kaleido
-dvc
-dvc[s3]
