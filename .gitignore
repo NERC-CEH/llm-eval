@@ -163,5 +163,4 @@ cython_debug/
 
 metrics.txt
 metrics.png
-/data
 gdrive-oauth.txt

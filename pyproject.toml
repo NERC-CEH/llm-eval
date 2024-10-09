@@ -13,6 +13,7 @@ dependencies = [
     "bitsandbytes",
     "haystack-ai",
     "accelerate",
+    "sentence-transformers",
 ]
 
 [project.optional-dependencies]

@@ -1,0 +1,14 @@
+stages:
+  fetch:
+    cmd: python src/llm_eval/fetch_data.py
+    deps:
+    - src/llm_eval/fetch_data.py
+    outs:
+    - data/eidc_metadata.json
+  prepare:
+    cmd: python src/llm_eval/prepare_data.py
+    deps:
+    - data/eidc_metadata.json
+    - src/llm_eval/prepare_data.py
+    outs:
+    - data/prepared_data.json
