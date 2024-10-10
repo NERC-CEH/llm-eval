@@ -10,7 +10,7 @@ def main():
     with open("data/eidc_metadata.json") as input, open("data/prepared_data.json", "w") as output:
         data = json.load(input)
         for dataset in data["datasets"]:
-            dataset["desc_embedding"] = create_embedding(dataset["desc"]).tolist()
+            dataset["desc_emb"] = create_embedding(dataset["desc"]).tolist()
         json.dump(data, output)
 
 
