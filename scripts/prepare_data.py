@@ -3,7 +3,7 @@ import json
 from argparse import ArgumentParser
 
 
-METADATA_FIELDS = ["title", "description", "lineage"]
+METADATA_FIELDS = ["title", "description", "lineage", "title"]
 
 
 def extact_eidc_metadata_fields(json_data: Dict, fields: List[str] = METADATA_FIELDS) -> Dict[str,str]:

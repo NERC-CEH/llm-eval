@@ -15,7 +15,7 @@ def main(output_file: str) -> None:
         },
     )
     with open(output_file, "w") as f:
-        json.dump(res.json(), f)
+        json.dump(res.json(), f, indent=4)
 
 
 if __name__ == "__main__":
