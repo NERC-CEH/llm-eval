@@ -6,9 +6,9 @@ stages:
     outs:
     - data/eidc_metadata.json
   prepare:
-    cmd: python scripts/prepare_data.py data/eidc_metadata.json data/prepared_eidc_metadata.json
+    cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
     deps:
     - data/eidc_metadata.json
-    - scripts/prepare_data.py
+    - scripts/extract_metadata.py
     outs:
-    - data/prepared_eidc_metadata.json
+    - data/extracted_metadata.json

@@ -3,17 +3,19 @@ import json
 from argparse import ArgumentParser
 
 
-METADATA_FIELDS = ["title", "description", "lineage", "title"]
+METADATA_FIELDS = ["title", "description", "lineage"]
 
 
-def extact_eidc_metadata_fields(json_data: Dict, fields: List[str] = METADATA_FIELDS) -> Dict[str,str]:
-    metadata = {}
-    metadata["id"] = json_data["identifier"]
+def extact_eidc_metadata_fields(json_data: Dict, fields: List[str] = METADATA_FIELDS) -> List[Dict[str,str]]:
+    metadatas = []
     for field in fields:
         if json_data[field]:
+            metadata = {}
+            metadata["id"] = json_data["identifier"]
             metadata["field"] = field
             metadata["value"] = json_data[field]
-    return metadata
+            metadatas.append(metadata)
+    return metadatas
 
 
 def parse_eidc_metadata(file_path: str) -> List[Dict[str,str]]:
@@ -22,7 +24,7 @@ def parse_eidc_metadata(file_path: str) -> List[Dict[str,str]]:
         json_data = json.load(f)
         for dataset in json_data["results"]:
             dataset_metadata = extact_eidc_metadata_fields(dataset)
-            data.append(dataset_metadata)
+            data.extend(dataset_metadata)
     return data
 
 

@@ -13,18 +13,18 @@ stages:
       md5: 423dc3a61ede72e1d5c818d74277c0b4
       size: 12140491
   prepare:
-    cmd: python scripts/prepare_data.py data/eidc_metadata.json data/prepared_eidc_metadata.json
+    cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
     deps:
     - path: data/eidc_metadata.json
       hash: md5
       md5: 423dc3a61ede72e1d5c818d74277c0b4
       size: 12140491
-    - path: scripts/prepare_data.py
+    - path: scripts/extract_metadata.py
       hash: md5
-      md5: bcbf4413aeee83928054d9c6c6c2bacc
-      size: 1224
+      md5: c2fa7d2c4b8f28a6e24536ce0df244fd
+      size: 1296
     outs:
-    - path: data/prepared_eidc_metadata.json
+    - path: data/extracted_metadata.json
       hash: md5
-      md5: 0b4ca8c49da450bc8fec0e92d577466c
-      size: 411936
+      md5: 7d2ae8d6a41a960592f30496eb498af7
+      size: 4578493
