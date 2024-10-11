@@ -1,30 +1,30 @@
 schema: '2.0'
 stages:
-  fetch:
-    cmd: python src/llm_eval/fetch_data.py
+  fetch-metadata:
+    cmd: python scripts/fetch_eidc_metadata.py data/eidc_metadata.json
     deps:
-    - path: src/llm_eval/fetch_data.py
+    - path: scripts/fetch_eidc_metadata.py
       hash: md5
-      md5: 10194a16edb7620ed4342e00104f5f95
-      size: 307
+      md5: ff336062c921e5e8f95bd569cd064e22
+      size: 664
     outs:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 5db14ae6031ed3bb3a99588a0a313bda
-      size: 101
+      md5: 3c4cd23bfc699358c955d4e7c68e8c9d
+      size: 8968593
   prepare:
-    cmd: python src/llm_eval/prepare_data.py
+    cmd: python scripts/prepare_data.py data/eidc_metadata.json data/prepared_eidc_metadata.json
     deps:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 5db14ae6031ed3bb3a99588a0a313bda
-      size: 101
-    - path: src/llm_eval/prepare_data.py
+      md5: 3c4cd23bfc699358c955d4e7c68e8c9d
+      size: 8968593
+    - path: scripts/prepare_data.py
       hash: md5
-      md5: d285150e5a1f7c252c0a4562bf24ce0e
-      size: 519
+      md5: bdab13adab508052f1d16ab0967b428b
+      size: 1215
     outs:
-    - path: data/prepared_data.json
+    - path: data/prepared_eidc_metadata.json
       hash: md5
-      md5: a6ed512685f3c5f2073517183fbad9fa
-      size: 17005
+      md5: ffd8914e46ffba8c47cdca6eb6ae0140
+      size: 2120475
