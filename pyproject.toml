@@ -21,3 +21,6 @@ jupyter = [
     "ipykernel",
     "ipywidgets",
 ]
+
+[tool.setuptools]
+py-modules = []
