@@ -28,3 +28,35 @@ stages:
       hash: md5
       md5: 7d2ae8d6a41a960592f30496eb498af7
       size: 4578493
+  extract-metadata:
+    cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
+    deps:
+    - path: data/eidc_metadata.json
+      hash: md5
+      md5: 423dc3a61ede72e1d5c818d74277c0b4
+      size: 12140491
+    - path: scripts/extract_metadata.py
+      hash: md5
+      md5: c2fa7d2c4b8f28a6e24536ce0df244fd
+      size: 1296
+    outs:
+    - path: data/extracted_metadata.json
+      hash: md5
+      md5: 7d2ae8d6a41a960592f30496eb498af7
+      size: 4578493
+  chunk-data:
+    cmd: python scripts/chunk_data.py -o data/chunked_data.json -c 500 -ol 100 data/extracted_metadata.json
+    deps:
+    - path: data/extracted_metadata.json
+      hash: md5
+      md5: 7d2ae8d6a41a960592f30496eb498af7
+      size: 4578493
+    - path: scripts/chunk_data.py
+      hash: md5
+      md5: b89a3ae9f6f9a0142149e70dc6fc5735
+      size: 1903
+    outs:
+    - path: data/chunked_data.json
+      hash: md5
+      md5: 7ba3d3785db066283e35d654e11cf28b
+      size: 6373503

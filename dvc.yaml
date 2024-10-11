@@ -5,10 +5,17 @@ stages:
     - scripts/fetch_eidc_metadata.py
     outs:
     - data/eidc_metadata.json
-  prepare:
+  extract-metadata:
     cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
     deps:
     - data/eidc_metadata.json
     - scripts/extract_metadata.py
     outs:
     - data/extracted_metadata.json
+  chunk-data:
+    cmd: python scripts/chunk_data.py -o data/chunked_data.json -c 500 -ol 100 data/extracted_metadata.json
+    deps:
+    - data/extracted_metadata.json
+    - scripts/chunk_data.py
+    outs:
+    - data/chunked_data.json
