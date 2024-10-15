@@ -10,7 +10,7 @@ def main(output_file: str) -> None:
         headers={"content-type": "application/json"},
         params={
             "page": 1,
-            "rows": 2000,
+            "rows": 2500,
             "term": "recordType:Dataset",
         },
     )

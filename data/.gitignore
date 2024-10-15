@@ -5,3 +5,5 @@
 /prepared_eidc_metadata.json
 /extracted_metadata.json
 /chunked_data.json
+/chunked_embeddings.json
+/embeddings.json

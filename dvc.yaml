@@ -1,21 +1,28 @@
 stages:
   fetch-metadata:
-    cmd: python scripts/fetch_eidc_metadata.py data/eidc_metadata.json
+    cmd: python scripts/fetch_eidc_metadata.py ${files.metadata}
     deps:
     - scripts/fetch_eidc_metadata.py
     outs:
-    - data/eidc_metadata.json
+    - ${files.metadata}
   extract-metadata:
-    cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
+    cmd: python scripts/extract_metadata.py ${files.metadata} ${files.extracted}
     deps:
-    - data/eidc_metadata.json
+    - ${files.metadata}
     - scripts/extract_metadata.py
     outs:
-    - data/extracted_metadata.json
+    - ${files.extracted}
   chunk-data:
-    cmd: python scripts/chunk_data.py -o data/chunked_data.json -c 500 -ol 100 data/extracted_metadata.json
+    cmd: python scripts/chunk_data.py -o ${files.chunked} -c ${hp.chunk-size} -ol ${hp.overlap} -s ${sample-size} ${files.extracted}
     deps:
-    - data/extracted_metadata.json
+    - ${files.extracted}
     - scripts/chunk_data.py
     outs:
-    - data/chunked_data.json
+    - ${files.chunked}
+  create-embeddings:
+    cmd: python scripts/create_embeddings.py ${files.chunked} ${files.embeddings}
+    deps:
+    - ${files.chunked}
+    - scripts/create_embeddings.py
+    outs:
+    - ${files.embeddings}

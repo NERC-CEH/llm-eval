@@ -1,0 +1,9 @@
+hp:
+  chunk-size: 300
+  overlap: 100
+files:
+  metadata: "data/eidc_metadata.json"
+  extracted: "data/extracted_metadata.json"
+  chunked: "data/chunked_data.json"
+  embeddings: "data/embeddings.json"
+sample-size: 10 # sample size of 0 will process all data
