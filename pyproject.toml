@@ -14,6 +14,7 @@ dependencies = [
     "haystack-ai",
     "accelerate",
     "sentence-transformers",
+    "chromadb",
 ]
 
 [project.optional-dependencies]

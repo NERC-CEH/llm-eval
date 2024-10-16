@@ -26,3 +26,10 @@ stages:
     - scripts/create_embeddings.py
     outs:
     - ${files.embeddings}
+  upload-to-docstore:
+    cmd: python scripts/upload_to_docstore.py ${files.embeddings} -o ${files.doc-store} -em ${hp.embeddings-model}
+    deps:
+    - ${files.embeddings}
+    - scripts/upload_to_docstore.py
+    outs:
+    - ${files.doc-store}

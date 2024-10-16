@@ -77,3 +77,21 @@ stages:
       hash: md5
       md5: b08299369d1f243eb8d8ffa2cdb9a90f
       size: 351126
+  upload-to-docstore:
+    cmd: python scripts/upload_to_docstore.py data/embeddings.json -o data/chroma-data
+      -em all-MiniLM-L6-v2
+    deps:
+    - path: data/embeddings.json
+      hash: md5
+      md5: b08299369d1f243eb8d8ffa2cdb9a90f
+      size: 351126
+    - path: scripts/upload_to_docstore.py
+      hash: md5
+      md5: ae8755770166dd3d6c1efb9f15723116
+      size: 1836
+    outs:
+    - path: data/chroma-data
+      hash: md5
+      md5: 2f2ba629bf078284bb6d6be73c6166a7.dir
+      size: 2069220
+      nfiles: 5
