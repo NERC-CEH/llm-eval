@@ -15,6 +15,8 @@ dependencies = [
     "accelerate",
     "sentence-transformers",
     "chromadb",
+    "ollama-haystack == 0.0.7",
+    "chroma-haystack",
 ]
 
 [project.optional-dependencies]

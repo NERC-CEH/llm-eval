@@ -33,3 +33,6 @@ stages:
     - scripts/upload_to_docstore.py
     outs:
     - ${files.doc-store}
+  run-rag-pipeline:
+    cmd python scripts/run_rag_pipeline.py ${files.test-set}
+    
