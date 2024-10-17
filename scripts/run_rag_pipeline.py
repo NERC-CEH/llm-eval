@@ -57,7 +57,7 @@ def build_rag_pipeline(model_name: str) -> Pipeline:
     return rag_pipe
 
 
-def query_pipeline(query: str, pipeline: Pipeline):
+def run_query(query: str, pipeline: Pipeline):
     return pipeline.run(
         {
             "retriever": {"query": query},
@@ -67,25 +67,27 @@ def query_pipeline(query: str, pipeline: Pipeline):
     )
 
 
-def main(test_data_file: str):
+def query_pipeline(questions, rag_pipe):
+    answers = []
+    contexts = []
+    for q in questions:
+        response = run_query(q, rag_pipe)
+        answers.append(response["answer_builder"]["answers"][0].data)
+        contexts.append([doc.content for doc in response["answer_builder"]["answers"][0].documents])
+    return answers, contexts
+
+
+def main(test_data_file: str, ouput_file: str):
     rag_pipe = build_rag_pipeline("llama3.1")
 
     df = pd.read_csv(test_data_file)
-    responses = []
-    for q in df["question"]:
-        responses.append(query_pipeline(q, rag_pipe))
-    df["rag_response"] = responses
-    df.to_csv("data/rag_response.csv")
+    df.drop(columns=["rating", "contexts"], inplace=True)
 
-    query = "Who collected the land cover map data?"
-    result = rag_pipe.run(
-        {
-            "retriever": {"query": query},
-            "prompt_builder": {"query": query},
-            "answer_builder": {"query": query},
-        }
-    )
-    print(result)
+    answers, contexts = query_pipeline(df["question"], rag_pipe)
+    
+    df["answer"] = answers
+    df["contexts"] = contexts
+    df.to_csv(ouput_file, index=False)
 
 
 if __name__ == "__main__":
@@ -94,5 +96,9 @@ if __name__ == "__main__":
         "test_data_file",
         help="File containing test queries to generate response from the RAG pipeline.",
     )
+    parser.add_argument(
+        "output_file",
+        help="File to output results to.",
+    )
     args = parser.parse_args()
-    main(args.test_data_file)
+    main(args.test_data_file, args.output_file)

@@ -17,6 +17,8 @@ dependencies = [
     "chromadb",
     "ollama-haystack == 0.0.7",
     "chroma-haystack",
+    "ragas == 0.1.10",
+    "nltk"
 ]
 
 [project.optional-dependencies]

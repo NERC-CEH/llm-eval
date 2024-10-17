@@ -52,6 +52,10 @@ stages:
       hash: md5
       md5: fce18ce3c43175af1cea5d84dac9baf9
       size: 4579965
+    - path: data/supporting-docs.json
+      hash: md5
+      md5: 0febface6f1d23fda46c11bef65284f4
+      size: 34
     - path: scripts/chunk_data.py
       hash: md5
       md5: 681528e4aa1dc8cfb5fe5e5472e25fdf
@@ -95,3 +99,45 @@ stages:
       md5: 2f2ba629bf078284bb6d6be73c6166a7.dir
       size: 2069220
       nfiles: 5
+  run-rag-pipeline:
+    cmd: python scripts/run_rag_pipeline.py data/eidc_rag_test_sample.csv data/evaluation_data.csv
+    deps:
+    - path: data/chroma-data
+      hash: md5
+      md5: 1d7c499f71791267391ff4108632988c.dir
+      size: 2069220
+      nfiles: 5
+    - path: data/eidc_rag_test_sample.csv
+      hash: md5
+      md5: a371d83c5822d256286e80d64d58c3fe
+      size: 7524
+    - path: scripts/run_rag_pipeline.py
+      hash: md5
+      md5: 6d1f49fa8b22288ecd50ed0e3898fd60
+      size: 3153
+    outs:
+    - path: data/evaluation_data.csv
+      hash: md5
+      md5: e313cb899c10a2b5ad670b8bc84d059f
+      size: 8407
+  generate-testset:
+    cmd: cp data/synthetic-datasets/eidc_rag_test_sample.csv data/
+    outs:
+    - path: data/eidc_rag_test_sample.csv
+      hash: md5
+      md5: a371d83c5822d256286e80d64d58c3fe
+      size: 7524
+  fetch-supporting-docs:
+    cmd: echo "Fetch supporitng docs from legilo" > data/supporting-docs.json
+    outs:
+    - path: data/supporting-docs.json
+      hash: md5
+      md5: 0febface6f1d23fda46c11bef65284f4
+      size: 34
+  evaluate:
+    cmd: echo "Evaluate responses"
+    deps:
+    - path: data/evaluation_data.csv
+      hash: md5
+      md5: e313cb899c10a2b5ad670b8bc84d059f
+      size: 8407
