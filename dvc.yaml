@@ -51,6 +51,10 @@ stages:
     outs: 
     - ${files.eval-set}
   evaluate:
-    cmd: echo "Evaluate responses"
+    cmd: python scripts/evaluate.py ${files.eval-set} -m ${files.metrics} -img ${files.eval-plot}
     deps:
     - ${files.eval-set}
+    - scripts/evaluate.py
+    outs:
+    - ${files.metrics}
+    - ${files.eval-plot}

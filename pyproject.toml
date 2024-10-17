@@ -18,7 +18,8 @@ dependencies = [
     "ollama-haystack == 0.0.7",
     "chroma-haystack",
     "ragas == 0.1.10",
-    "nltk"
+    "nltk",
+    "nbformat>=4.2.0",
 ]
 
 [project.optional-dependencies]

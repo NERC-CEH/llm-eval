@@ -104,7 +104,7 @@ stages:
     deps:
     - path: data/chroma-data
       hash: md5
-      md5: 1d7c499f71791267391ff4108632988c.dir
+      md5: 0254e85bb660da611cfa14e5221dae92.dir
       size: 2069220
       nfiles: 5
     - path: data/eidc_rag_test_sample.csv
@@ -118,8 +118,8 @@ stages:
     outs:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: e313cb899c10a2b5ad670b8bc84d059f
-      size: 8407
+      md5: 47a0adeb2ee1cb67202048684064d30f
+      size: 7293
   generate-testset:
     cmd: cp data/synthetic-datasets/eidc_rag_test_sample.csv data/
     outs:
@@ -135,9 +135,23 @@ stages:
       md5: 0febface6f1d23fda46c11bef65284f4
       size: 34
   evaluate:
-    cmd: echo "Evaluate responses"
+    cmd: python scripts/evaluate.py data/evaluation_data.csv -m data/metrics.json
+      -img data/eval.png
     deps:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: e313cb899c10a2b5ad670b8bc84d059f
-      size: 8407
+      md5: 47a0adeb2ee1cb67202048684064d30f
+      size: 7293
+    - path: scripts/evaluate.py
+      hash: md5
+      md5: 51f036b805f23dd3ebfd5d819bc9d457
+      size: 2489
+    outs:
+    - path: data/eval.png
+      hash: md5
+      md5: 8c11f987449f8718b6f6011078b6c259
+      size: 49498
+    - path: data/metrics.json
+      hash: md5
+      md5: 53fba29cb236fedd3c6446ea94fea3cc
+      size: 215

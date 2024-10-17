@@ -11,3 +11,5 @@
 /evaluation_data.csv
 /eidc_rag_test_sample.csv
 /supporting-docs.json
+/metrics.json
+/eval.png
