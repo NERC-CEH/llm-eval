@@ -58,3 +58,5 @@ stages:
     outs:
     - ${files.metrics}
     - ${files.eval-plot}
+metrics: 
+- ${files.metrics}
