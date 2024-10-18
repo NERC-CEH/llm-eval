@@ -2,6 +2,9 @@ hp:
   chunk-size: 300
   overlap: 100
   embeddings-model: "all-MiniLM-L6-v2"
+doc-store:
+  collection: "eidc-data"
+  files: "data/chroma-data"
 files:
   metadata: "data/eidc_metadata.json"
   extracted: "data/extracted_metadata.json"

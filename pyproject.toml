@@ -20,6 +20,11 @@ dependencies = [
     "ragas == 0.1.10",
     "nltk",
     "nbformat>=4.2.0",
+    "ruff",
+    "mypy",
+    "types-requests",
+    "types-tqdm",
+    "pandas-stubs",
 ]
 
 [project.optional-dependencies]
@@ -30,3 +35,6 @@ jupyter = [
 
 [tool.setuptools]
 py-modules = []
+
+[tool.mypy]
+files = ["scripts"]

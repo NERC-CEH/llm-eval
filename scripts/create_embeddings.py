@@ -3,9 +3,10 @@ from sentence_transformers import SentenceTransformer
 from argparse import ArgumentParser
 from tqdm import tqdm
 
+
 def create_embedding(text):
     model = SentenceTransformer("all-MiniLM-L6-v2")
-    return model.encode(text) 
+    return model.encode(text)
 
 
 def main(input_file, output_file):

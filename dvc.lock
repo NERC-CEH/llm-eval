@@ -5,13 +5,13 @@ stages:
     deps:
     - path: scripts/fetch_eidc_metadata.py
       hash: md5
-      md5: ba838a284da239217d0464f08e0a45ce
-      size: 674
+      md5: 53d620665448ef91f2deedb517e2f502
+      size: 675
     outs:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: fc2f9ebe92cbd07eb06ff6e39366fdac
-      size: 12146216
+      md5: b4f3774a2921debb4d7740165ac604d4
+      size: 12157676
   prepare:
     cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
     deps:
@@ -33,25 +33,25 @@ stages:
     deps:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: fc2f9ebe92cbd07eb06ff6e39366fdac
-      size: 12146216
+      md5: b4f3774a2921debb4d7740165ac604d4
+      size: 12157676
     - path: scripts/extract_metadata.py
       hash: md5
-      md5: c2fa7d2c4b8f28a6e24536ce0df244fd
-      size: 1296
+      md5: 3f0269a6413845f4425af55e7cea7bf8
+      size: 1304
     outs:
     - path: data/extracted_metadata.json
       hash: md5
-      md5: fce18ce3c43175af1cea5d84dac9baf9
-      size: 4579965
+      md5: 789fda7a14f9a85c6ee0e10af8170a95
+      size: 4584498
   chunk-data:
     cmd: python scripts/chunk_data.py -o data/chunked_data.json -c 300 -ol 100 -s
       10 data/extracted_metadata.json
     deps:
     - path: data/extracted_metadata.json
       hash: md5
-      md5: fce18ce3c43175af1cea5d84dac9baf9
-      size: 4579965
+      md5: 789fda7a14f9a85c6ee0e10af8170a95
+      size: 4584498
     - path: data/supporting-docs.json
       hash: md5
       md5: 0febface6f1d23fda46c11bef65284f4
@@ -74,7 +74,7 @@ stages:
       size: 14947
     - path: scripts/create_embeddings.py
       hash: md5
-      md5: 3dc6ef284730398375a13df4bff41846
+      md5: 4649c700dfae922b43b3608ee4f00c1a
       size: 808
     outs:
     - path: data/embeddings.json
@@ -83,7 +83,7 @@ stages:
       size: 351126
   upload-to-docstore:
     cmd: python scripts/upload_to_docstore.py data/embeddings.json -o data/chroma-data
-      -em all-MiniLM-L6-v2
+      -em all-MiniLM-L6-v2 -c eidc-data
     deps:
     - path: data/embeddings.json
       hash: md5
@@ -91,20 +91,21 @@ stages:
       size: 351126
     - path: scripts/upload_to_docstore.py
       hash: md5
-      md5: ae8755770166dd3d6c1efb9f15723116
-      size: 1836
+      md5: 41da88e3bb6d2592bee938ce347f6983
+      size: 1905
     outs:
     - path: data/chroma-data
       hash: md5
-      md5: 2f2ba629bf078284bb6d6be73c6166a7.dir
+      md5: 6e5431dd6f6ec33877e8f9d4da166d83.dir
       size: 2069220
       nfiles: 5
   run-rag-pipeline:
     cmd: python scripts/run_rag_pipeline.py data/eidc_rag_test_sample.csv data/evaluation_data.csv
+      data/chroma-data -c eidc-data
     deps:
     - path: data/chroma-data
       hash: md5
-      md5: 0254e85bb660da611cfa14e5221dae92.dir
+      md5: 6e5431dd6f6ec33877e8f9d4da166d83.dir
       size: 2069220
       nfiles: 5
     - path: data/eidc_rag_test_sample.csv
@@ -113,13 +114,13 @@ stages:
       size: 7524
     - path: scripts/run_rag_pipeline.py
       hash: md5
-      md5: 6d1f49fa8b22288ecd50ed0e3898fd60
-      size: 3153
+      md5: 8d5fc0669771146562c773186f4f44f6
+      size: 3667
     outs:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: 47a0adeb2ee1cb67202048684064d30f
-      size: 7293
+      md5: f6bce3f5c551e84da224d36201858839
+      size: 6638
   generate-testset:
     cmd: cp data/synthetic-datasets/eidc_rag_test_sample.csv data/
     outs:
@@ -140,18 +141,18 @@ stages:
     deps:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: 47a0adeb2ee1cb67202048684064d30f
-      size: 7293
+      md5: f6bce3f5c551e84da224d36201858839
+      size: 6638
     - path: scripts/evaluate.py
       hash: md5
-      md5: 51f036b805f23dd3ebfd5d819bc9d457
-      size: 2489
+      md5: 10f76511eafc8a1a9b90e9ae92a76bc5
+      size: 2633
     outs:
     - path: data/eval.png
       hash: md5
-      md5: 8c11f987449f8718b6f6011078b6c259
-      size: 49498
+      md5: fd66aa842f93e8f370399dae5b68e2fe
+      size: 50525
     - path: data/metrics.json
       hash: md5
-      md5: 53fba29cb236fedd3c6446ea94fea3cc
-      size: 215
+      md5: 55266ae1bd64a3499508d07651a5aa13
+      size: 214

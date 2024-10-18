@@ -6,7 +6,9 @@ from argparse import ArgumentParser
 METADATA_FIELDS = ["title", "description", "lineage"]
 
 
-def extact_eidc_metadata_fields(json_data: Dict, fields: List[str] = METADATA_FIELDS) -> List[Dict[str,str]]:
+def extact_eidc_metadata_fields(
+    json_data: Dict, fields: List[str] = METADATA_FIELDS
+) -> List[Dict[str, str]]:
     metadatas = []
     for field in fields:
         if json_data[field]:
@@ -18,7 +20,7 @@ def extact_eidc_metadata_fields(json_data: Dict, fields: List[str] = METADATA_FI
     return metadatas
 
 
-def parse_eidc_metadata(file_path: str) -> List[Dict[str,str]]:
+def parse_eidc_metadata(file_path: str) -> List[Dict[str, str]]:
     data = []
     with open(file_path) as f:
         json_data = json.load(f)

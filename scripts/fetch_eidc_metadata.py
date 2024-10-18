@@ -4,6 +4,7 @@ from argparse import ArgumentParser
 
 URL = "https://catalogue.ceh.ac.uk/eidc/documents"
 
+
 def main(output_file: str) -> None:
     res = requests.get(
         URL,

@@ -32,7 +32,7 @@ stages:
     outs:
     - ${files.embeddings}
   upload-to-docstore:
-    cmd: python scripts/upload_to_docstore.py ${files.embeddings} -o ${files.doc-store} -em ${hp.embeddings-model}
+    cmd: python scripts/upload_to_docstore.py ${files.embeddings} -o ${doc-store.files} -em ${hp.embeddings-model} -c ${doc-store.collection}
     deps:
     - ${files.embeddings}
     - scripts/upload_to_docstore.py
@@ -43,7 +43,7 @@ stages:
     outs: 
     - ${files.test-set}
   run-rag-pipeline:
-    cmd: python scripts/run_rag_pipeline.py ${files.test-set} ${files.eval-set}
+    cmd: python scripts/run_rag_pipeline.py ${files.test-set} ${files.eval-set} ${files.doc-store} -c ${doc-store.collection}
     deps:
     - ${files.test-set}
     - ${files.doc-store}

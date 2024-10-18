@@ -1,13 +1,17 @@
 from argparse import ArgumentParser
 import json
 import uuid
+import shutil
+import os
 
 import chromadb
 from chromadb.utils import embedding_functions
 
 
 def main(input_file: str, output_path: str, collection_name: str, embedding_model: str):
-    print(collection_name)
+    if os.path.exists(output_path):
+        shutil.rmtree(output_path)
+
     with open(input_file) as f:
         json_data = json.load(f)
 

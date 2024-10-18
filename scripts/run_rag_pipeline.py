@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+import shutil
 from haystack import Pipeline
 from haystack_integrations.document_stores.chroma import ChromaDocumentStore
 from haystack_integrations.components.retrievers.chroma import ChromaQueryTextRetriever
@@ -8,9 +9,12 @@ from haystack.components.builders.answer_builder import AnswerBuilder
 import pandas as pd
 
 
-def build_rag_pipeline(model_name: str) -> Pipeline:
+TMP_DOC_PATH = ".tmp/doc-store"
+
+
+def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
     document_store = ChromaDocumentStore(
-        collection_name="eidc-data", persist_path="data/chroma-data"
+        collection_name=collection_name, persist_path=TMP_DOC_PATH
     )
     retriever = ChromaQueryTextRetriever(document_store, top_k=3)
     print("Creating prompt template...")
@@ -73,21 +77,29 @@ def query_pipeline(questions, rag_pipe):
     for q in questions:
         response = run_query(q, rag_pipe)
         answers.append(response["answer_builder"]["answers"][0].data)
-        contexts.append([doc.content for doc in response["answer_builder"]["answers"][0].documents])
+        contexts.append(
+            [doc.content for doc in response["answer_builder"]["answers"][0].documents]
+        )
     return answers, contexts
 
 
-def main(test_data_file: str, ouput_file: str):
-    rag_pipe = build_rag_pipeline("llama3.1")
+def main(
+    test_data_file: str, ouput_file: str, doc_store_path: str, collection_name: str
+):
+    shutil.copytree(doc_store_path, TMP_DOC_PATH)
+
+    rag_pipe = build_rag_pipeline("llama3.1", collection_name)
 
     df = pd.read_csv(test_data_file)
     df.drop(columns=["rating", "contexts"], inplace=True)
 
     answers, contexts = query_pipeline(df["question"], rag_pipe)
-    
+
     df["answer"] = answers
     df["contexts"] = contexts
     df.to_csv(ouput_file, index=False)
+
+    shutil.rmtree(TMP_DOC_PATH)
 
 
 if __name__ == "__main__":
@@ -100,5 +112,15 @@ if __name__ == "__main__":
         "output_file",
         help="File to output results to.",
     )
+    parser.add_argument(
+        "doc_store_path",
+        help="Path to the doc store.",
+    )
+    parser.add_argument(
+        "-c",
+        "--collection",
+        help="Collection name in doc store.",
+        default="eidc-data",
+    )
     args = parser.parse_args()
-    main(args.test_data_file, args.output_file)
+    main(args.test_data_file, args.output_file, args.doc_store_path, args.collection)

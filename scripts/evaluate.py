@@ -19,12 +19,13 @@ from ragas.metrics import (
 )
 import json
 
+
 def main(eval_dataset: str, metric_output: str, image_output: str) -> None:
-    nest_asyncio.apply() # apply the event loop async fix
+    nest_asyncio.apply()  # apply the event loop async fix
     df = pd.read_csv(eval_dataset, converters={"contexts": pd.eval})
     eval_dataset = Dataset.from_pandas(df)
-    llm = ChatOllama(model='mistral-nemo', num_ctx=16384)
-    embeddings = OllamaEmbeddings(model='mistral-nemo', num_ctx=16384)
+    llm = ChatOllama(model="mistral-nemo", num_ctx=16384)
+    embeddings = OllamaEmbeddings(model="mistral-nemo", num_ctx=16384)
     result = evaluate(
         eval_dataset,
         metrics=[
@@ -45,17 +46,27 @@ def main(eval_dataset: str, metric_output: str, image_output: str) -> None:
     pio.templates.default = "gridon"
     fig = go.Figure()
 
-    
     with open(metric_output, "w") as f:
         json.dump(result, f)
-    metrics = [metric for metric in result_df.columns.to_list() if metric not in ["question", "ground_truth", "answer", "contexts"]]
+    metrics = [
+        metric
+        for metric in result_df.columns.to_list()
+        if metric not in ["question", "ground_truth", "answer", "contexts"]
+    ]
 
     for metric in metrics:
-        fig.add_trace(go.Violin(y=result_df[metric], name=metric, points="all", box_visible=True, meanline_visible=True))
-    fig.update_yaxes(range=[-0.02,1.02])
+        fig.add_trace(
+            go.Violin(
+                y=result_df[metric],
+                name=metric,
+                points="all",
+                box_visible=True,
+                meanline_visible=True,
+            )
+        )
+    fig.update_yaxes(range=[-0.02, 1.02])
     with open(image_output, "wb") as f:
         f.write(fig.to_image(format="png"))
-
 
 
 if __name__ == "__main__":
