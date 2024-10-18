@@ -29,12 +29,12 @@ This pipeline is defined in [`dvc.yaml`](dvc.yaml) and can be viewed with the co
 dvc dag
 ```
 ```
-                 +----------------+                                        
-                 | fetch-metadata |                                        
-                 +----------------+                                        
-                          *                                                
-                          *                                                
-                          *                                                
+                                  +----------------+                       
+                                  | fetch-metadata |                       
+                                  +----------------+                       
+                                  **               **                      
+                               ***                   ***                   
+                             **                         **                 
                 +------------------+            +-----------------------+  
                 | extract-metadata |            | fetch-supporting-docs |  
                 +------------------+            +-----------------------+  
@@ -67,9 +67,34 @@ dvc dag
                           *                                                
                     +----------+                                           
                     | evaluate |                                           
-                    +----------+
+                    +----------+  
 ```
 
+> Note: To re-run the `fetch-supporting-docs` stage of the pipeline you will need to request access to the [Legilo](https://legilo.eds-infra.ceh.ac.uk/) service from the EDS dev team and provide your `username` and `password` in a `.env` file.
+
+## Running Experiments
+The pipeline by default will run using the parameters defind in [`params.yaml`](params.yaml). To experiment with varying these paramaters you can change them directly, or use [DVC experiments](). 
+
+To run an experiment varying a particual parameter:
+```shell
+dvc exp run -S hp.chunk-size=1000
+```
+This will re-run the pipeline but override the value of the `hp.chunk-size` parameter in [`params.yaml`](params.yaml) and set it to `1000`. Only the necessary stages of the pipeline should be re-run and the result should appear in your workspace.
+
+You can compare the results of your experiment to the results of the baseline run of the pipeline using:
+```shell
+dvc exp diff
+```
+```shell
+Path               Metric              HEAD      workspace    Change
+data/metrics.json  answer_correctness  0.049482  0.043685     -0.0057974
+data/metrics.json  answer_similarity   0.19793   0.17474      -0.02319
+data/metrics.json  context_recall      0.125     0            -0.125
+data/metrics.json  faithfulness        0.75      0.69375      -0.05625
+
+Path         Param          HEAD    workspace    Change
+params.yaml  hp.chunk-size  300     1000         700
+```
 ## Notes
 
 ### DVC and CML
