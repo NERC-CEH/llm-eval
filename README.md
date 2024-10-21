@@ -28,48 +28,33 @@ This pipeline is defined in [`dvc.yaml`](dvc.yaml) and can be viewed with the co
 ```shell
 dvc dag
 ```
+or it can be output to mermaid format to display in markdown:
+```shell
+dvc dag -md
 ```
-                                  +----------------+                       
-                                  | fetch-metadata |                       
-                                  +----------------+                       
-                                  **               **                      
-                               ***                   ***                   
-                             **                         **                 
-                +------------------+            +-----------------------+  
-                | extract-metadata |            | fetch-supporting-docs |  
-                +------------------+            +-----------------------+  
-                                  **               **                      
-                                    ***         ***                        
-                                       **     **                           
-                                    +------------+                         
-                                    | chunk-data |                         
-                                    +------------+                         
-                                           *                               
-                                           *                               
-                                           *                               
-                                +-------------------+                      
-                                | create-embeddings |                      
-                                +-------------------+                      
-                                           *                               
-                                           *                               
-                                           *                               
-+------------------+            +--------------------+                     
-| generate-testset |            | upload-to-docstore |                     
-+------------------+            +--------------------+                     
-                  **              **                                       
-                    ***        ***                                         
-                       **    **                                            
-                +------------------+                                       
-                | run-rag-pipeline |                                       
-                +------------------+                                       
-                          *                                                
-                          *                                                
-                          *                                                
-                    +----------+                                           
-                    | evaluate |                                           
-                    +----------+  
+```mermaid
+flowchart TD
+	node1["chunk-data"]
+	node2["create-embeddings"]
+	node3["evaluate"]
+	node4["extract-metadata"]
+	node5["fetch-metadata"]
+	node6["fetch-supporting-docs"]
+	node7["generate-testset"]
+	node8["run-rag-pipeline"]
+	node9["upload-to-docstore"]
+	node1-->node2
+	node2-->node9
+	node4-->node1
+	node5-->node4
+	node5-->node6
+	node6-->node1
+	node7-->node8
+	node8-->node3
+	node9-->node8
+	node10["data/evaluation-sets.dvc"]
+	node11["data/synthetic-datasets.dvc"]
 ```
-
 > Note: To re-run the `fetch-supporting-docs` stage of the pipeline you will need to request access to the [Legilo](https://legilo.eds-infra.ceh.ac.uk/) service from the EDS dev team and provide your `username` and `password` in a `.env` file.
 
 ## Running Experiments
