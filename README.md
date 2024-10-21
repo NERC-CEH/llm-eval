@@ -3,23 +3,28 @@ This repository contains a reproducible workflow setup using [DVC](https://dvc.o
 
 ## Requirements
 - [Ollama](https://ollama.com/download) ([`llama3.1`](https://ollama.com/library/llama3.1) and [`mistral-nemo`](https://ollama.com/library/mistral-nemo) models)
+- [Python 3.9+](https://www.python.org/downloads/)
 
 ## Getting started
+### Setup
 First create a new virtual environment and install the required dependencies:
 ```shell
 python -m venv .venv
 source .venv/bin/activate
 pip install .
 ```
+### Configuration
 Next setup your local DVC configuration with your [Jasmin object store access key](https://help.jasmin.ac.uk/docs/short-term-project-storage/using-the-jasmin-object-store/#creating-an-access-key-and-secret):
 ```shell
 dvc remote modify --local jasmin access_key_id '<ACCES_KEY_ID>'
 dvc remote modify --local jasmin secret_access_key '<KEY_SECRET>'
 ```
+### Getting the data
 Pull the data from the object store using DVC:
 ```shell
 dvc pull
 ```
+### Working with the pipeline
 You should now be ready to re-run the pipeline:
 ```shell
 dvc repro

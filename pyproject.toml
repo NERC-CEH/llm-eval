@@ -9,7 +9,6 @@ dependencies = [
     "kaleido",
     "dvc",
     "dvc[s3]",
-    "vllm",
     "bitsandbytes",
     "haystack-ai",
     "accelerate",
