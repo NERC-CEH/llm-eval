@@ -3,28 +3,22 @@ name = "llm-eval"
 dynamic = ["version"]
 
 dependencies = [
-    "plotly",
-    "pandas",
-    "numpy",
-    "kaleido",
-    "dvc",
-    "dvc[s3]",
-    "vllm",
-    "bitsandbytes",
-    "haystack-ai",
-    "accelerate",
-    "sentence-transformers",
-    "chromadb",
+    "plotly == 5.24.1",
+    "pandas == 2.2.3",
+    "numpy == 1.26.4",
+    "kaleido == 0.2.1",
+    "dvc[s3] == 3.2.0 ",
+    "bitsandbytes == 0.44.1",
+    "haystack-ai == 2.6.0",
+    "accelerate == 1.0.0",
+    "sentence-transformers == 3.1.1",
+    "chromadb == 0.5.15",
     "ollama-haystack == 0.0.7",
-    "chroma-haystack",
+    "chroma-haystack == 0.22.1",
     "ragas == 0.1.10",
-    "nltk",
-    "nbformat>=4.2.0",
-    "ruff",
-    "mypy",
-    "types-requests",
-    "types-tqdm",
-    "pandas-stubs",
+    "nltk == 3.9.1",
+    "nbformat == 4.2.0",
+    "ruff == 0.7.0",
 ]
 
 [project.optional-dependencies]
@@ -35,6 +29,3 @@ jupyter = [
 
 [tool.setuptools]
 py-modules = []
-
-[tool.mypy]
-files = ["scripts"]
