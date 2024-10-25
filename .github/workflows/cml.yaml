@@ -3,9 +3,12 @@ on: [push]
 jobs:
   train-and-report:
     runs-on: ubuntu-latest
-    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: iterative/setup-cml@v2
       - name: Run pipeline
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
