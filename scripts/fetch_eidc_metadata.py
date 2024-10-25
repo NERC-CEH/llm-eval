@@ -1,6 +1,7 @@
-import requests
 import json
 from argparse import ArgumentParser
+
+import requests
 
 URL = "https://catalogue.ceh.ac.uk/eidc/documents"
 

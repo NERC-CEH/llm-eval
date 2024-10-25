@@ -1,15 +1,17 @@
 import json
-from sentence_transformers import SentenceTransformer
 from argparse import ArgumentParser
+
+from sentence_transformers import SentenceTransformer
+from torch import Tensor
 from tqdm import tqdm
 
 
-def create_embedding(text):
+def create_embedding(text: str) -> Tensor:
     model = SentenceTransformer("all-MiniLM-L6-v2")
     return model.encode(text)
 
 
-def main(input_file, output_file):
+def main(input_file: str, output_file: str) -> None:
     with open(input_file) as input, open(output_file, "w") as output:
         data = json.load(input)
         for chunk in tqdm(data):

@@ -1,6 +1,6 @@
-from typing import List, Dict
 import json
 from argparse import ArgumentParser
+from typing import Any, Dict, List
 
 
 def chunk_value(value: str, chunk_size: int, overlap: int) -> List[str]:
@@ -12,7 +12,9 @@ def chunk_value(value: str, chunk_size: int, overlap: int) -> List[str]:
     return chunks
 
 
-def chunk_metadata_value(metada_value, chunk_size, overlap):
+def chunk_metadata_value(
+    metada_value: str, chunk_size: int, overlap: int
+) -> List[Dict[str, Any]]:
     chunks = chunk_value(metada_value["value"], chunk_size, overlap)
     return [
         {

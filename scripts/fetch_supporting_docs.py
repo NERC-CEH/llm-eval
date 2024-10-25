@@ -1,15 +1,17 @@
-from argparse import ArgumentParser
-import logging
 import json
-from tqdm import tqdm
-import requests
+import logging
 import os
+from argparse import ArgumentParser
 from typing import Dict, List
+
+import requests
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
-def extract_ids(metadata_file: str):
+
+def extract_ids(metadata_file: str) -> List[str]:
     with open(metadata_file) as f:
         json_data = json.load(f)
         ids = [dataset["identifier"] for dataset in json_data["results"]]
@@ -19,7 +21,8 @@ def extract_ids(metadata_file: str):
 def get_supporting_docs(eidc_id: str, user: str, password: str) -> List[Dict[str, str]]:
     try:
         res = requests.get(
-            f"https://legilo.eds-infra.ceh.ac.uk/{eidc_id}/documents", auth=(user, password)
+            f"https://legilo.eds-infra.ceh.ac.uk/{eidc_id}/documents",
+            auth=(user, password),
         )
         json_data = res.json()
         docs = []
@@ -27,11 +30,13 @@ def get_supporting_docs(eidc_id: str, user: str, password: str) -> List[Dict[str
             docs.append({"id": eidc_id, "field": key, "value": val})
         return docs
     except Exception as e:
-        logger.error(f"Failed to download supporting docs for dataset {eidc_id}", exc_info=e)
+        logger.error(
+            f"Failed to download supporting docs for dataset {eidc_id}", exc_info=e
+        )
         return []
 
 
-def main(metadata_file: str, supporting_docs_file: str):
+def main(metadata_file: str, supporting_docs_file: str) -> None:
     load_dotenv()
     user = os.getenv("username")
     password = os.getenv("password")

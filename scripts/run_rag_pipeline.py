@@ -1,13 +1,14 @@
-from argparse import ArgumentParser
 import shutil
-from haystack import Pipeline
-from haystack_integrations.document_stores.chroma import ChromaDocumentStore
-from haystack_integrations.components.retrievers.chroma import ChromaQueryTextRetriever
-from haystack.components.builders import PromptBuilder
-from haystack_integrations.components.generators.ollama.generator import OllamaGenerator
-from haystack.components.builders.answer_builder import AnswerBuilder
-import pandas as pd
+from argparse import ArgumentParser
+from typing import Any, Dict, List, Tuple
 
+import pandas as pd
+from haystack import Pipeline
+from haystack.components.builders import PromptBuilder
+from haystack.components.builders.answer_builder import AnswerBuilder
+from haystack_integrations.components.generators.ollama.generator import OllamaGenerator
+from haystack_integrations.components.retrievers.chroma import ChromaQueryTextRetriever
+from haystack_integrations.document_stores.chroma import ChromaDocumentStore
 
 TMP_DOC_PATH = ".tmp/doc-store"
 
@@ -61,7 +62,7 @@ def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
     return rag_pipe
 
 
-def run_query(query: str, pipeline: Pipeline):
+def run_query(query: str, pipeline: Pipeline) -> Dict[str, Any]:
     return pipeline.run(
         {
             "retriever": {"query": query},
@@ -71,7 +72,7 @@ def run_query(query: str, pipeline: Pipeline):
     )
 
 
-def query_pipeline(questions, rag_pipe):
+def query_pipeline(questions: List[str], rag_pipe: Pipeline) -> Tuple[str, List[str]]:
     answers = []
     contexts = []
     for q in questions:
@@ -85,7 +86,7 @@ def query_pipeline(questions, rag_pipe):
 
 def main(
     test_data_file: str, ouput_file: str, doc_store_path: str, collection_name: str
-):
+) -> None:
     shutil.copytree(doc_store_path, TMP_DOC_PATH)
 
     rag_pipe = build_rag_pipeline("llama3.1", collection_name)

@@ -1,14 +1,16 @@
-from argparse import ArgumentParser
 import json
-import uuid
-import shutil
 import os
+import shutil
+import uuid
+from argparse import ArgumentParser
 
 import chromadb
 from chromadb.utils import embedding_functions
 
 
-def main(input_file: str, output_path: str, collection_name: str, embedding_model: str):
+def main(
+    input_file: str, output_path: str, collection_name: str, embedding_model: str
+) -> None:
     if os.path.exists(output_path):
         shutil.rmtree(output_path)
 
@@ -55,7 +57,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-em",
         "--embedding_model",
-        help="Embedding model to use in the doc store (must be the same as the function used to create embeddings.)",
+        help="""Embedding model to use in the doc store (must be the same as the
+        function used to create embeddings.)""",
         default="all-MiniLM-L6-v2",
     )
     args = parser.parse_args()

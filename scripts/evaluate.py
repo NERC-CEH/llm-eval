@@ -1,23 +1,24 @@
+import json
 from argparse import ArgumentParser
+
+import nest_asyncio
 import pandas as pd
-from datasets import Dataset
-from ragas import evaluate
-from ragas.run_config import RunConfig
-from langchain_community.embeddings import OllamaEmbeddings
-from langchain_community.chat_models import ChatOllama
 import plotly.graph_objects as go
 import plotly.io as pio
-import nest_asyncio
+from datasets import Dataset
+from langchain_community.chat_models import ChatOllama
+from langchain_community.embeddings import OllamaEmbeddings
+from ragas import evaluate
 from ragas.metrics import (
-    faithfulness,
+    answer_correctness,
     answer_relevancy,
+    answer_similarity,
+    context_entity_recall,
     context_precision,
     context_recall,
-    context_entity_recall,
-    answer_similarity,
-    answer_correctness,
+    faithfulness,
 )
-import json
+from ragas.run_config import RunConfig
 
 
 def main(eval_dataset: str, metric_output: str, image_output: str) -> None:

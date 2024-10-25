@@ -1,7 +1,6 @@
-from typing import List, Dict
 import json
 from argparse import ArgumentParser
-
+from typing import Dict, List
 
 METADATA_FIELDS = ["title", "description", "lineage"]
 
@@ -30,7 +29,7 @@ def parse_eidc_metadata(file_path: str) -> List[Dict[str, str]]:
     return data
 
 
-def main(input, output) -> None:
+def main(input: str, output: str) -> None:
     data = parse_eidc_metadata(input)
     with open(output, "w") as f:
         json.dump(data, f, indent=4)

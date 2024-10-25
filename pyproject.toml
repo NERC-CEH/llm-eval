@@ -1,7 +1,6 @@
 [project]
 name = "llm-eval"
-dynamic = ["version"]
-
+version = "0.1.0"
 dependencies = [
     "plotly == 5.24.1",
     "pandas == 2.2.3",
@@ -18,7 +17,6 @@ dependencies = [
     "ragas == 0.1.10",
     "nltk == 3.9.1",
     "nbformat == 4.2.0",
-    "ruff == 0.7.0",
 ]
 
 [project.optional-dependencies]
@@ -26,6 +24,25 @@ jupyter = [
     "ipykernel",
     "ipywidgets",
 ]
+lint = [
+    "ruff == 0.7.1",
+    "mypy == 1.13.0",
+]
+dev = [
+    "llm-eval[jupyter,lint]"
+]
 
-[tool.setuptools]
-py-modules = []
+[tool.ruff.lint]
+select = [
+    "I",
+    "E",
+    "F",
+    "ANN"
+]
+fixable = ["ALL"]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
