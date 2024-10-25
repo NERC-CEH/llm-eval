@@ -3,23 +3,28 @@ This repository contains a reproducible workflow setup using [DVC](https://dvc.o
 
 ## Requirements
 - [Ollama](https://ollama.com/download) ([`llama3.1`](https://ollama.com/library/llama3.1) and [`mistral-nemo`](https://ollama.com/library/mistral-nemo) models)
+- [Python 3.9+](https://www.python.org/downloads/)
 
 ## Getting started
+### Setup
 First create a new virtual environment and install the required dependencies:
 ```shell
 python -m venv .venv
 source .venv/bin/activate
 pip install .
 ```
+### Configuration
 Next setup your local DVC configuration with your [Jasmin object store access key](https://help.jasmin.ac.uk/docs/short-term-project-storage/using-the-jasmin-object-store/#creating-an-access-key-and-secret):
 ```shell
 dvc remote modify --local jasmin access_key_id '<ACCES_KEY_ID>'
 dvc remote modify --local jasmin secret_access_key '<KEY_SECRET>'
 ```
+### Getting the data
 Pull the data from the object store using DVC:
 ```shell
 dvc pull
 ```
+### Working with the pipeline
 You should now be ready to re-run the pipeline:
 ```shell
 dvc repro
@@ -28,48 +33,33 @@ This pipeline is defined in [`dvc.yaml`](dvc.yaml) and can be viewed with the co
 ```shell
 dvc dag
 ```
+or it can be output to mermaid format to display in markdown:
+```shell
+dvc dag -md
 ```
-                                  +----------------+                       
-                                  | fetch-metadata |                       
-                                  +----------------+                       
-                                  **               **                      
-                               ***                   ***                   
-                             **                         **                 
-                +------------------+            +-----------------------+  
-                | extract-metadata |            | fetch-supporting-docs |  
-                +------------------+            +-----------------------+  
-                                  **               **                      
-                                    ***         ***                        
-                                       **     **                           
-                                    +------------+                         
-                                    | chunk-data |                         
-                                    +------------+                         
-                                           *                               
-                                           *                               
-                                           *                               
-                                +-------------------+                      
-                                | create-embeddings |                      
-                                +-------------------+                      
-                                           *                               
-                                           *                               
-                                           *                               
-+------------------+            +--------------------+                     
-| generate-testset |            | upload-to-docstore |                     
-+------------------+            +--------------------+                     
-                  **              **                                       
-                    ***        ***                                         
-                       **    **                                            
-                +------------------+                                       
-                | run-rag-pipeline |                                       
-                +------------------+                                       
-                          *                                                
-                          *                                                
-                          *                                                
-                    +----------+                                           
-                    | evaluate |                                           
-                    +----------+  
+```mermaid
+flowchart TD
+	node1["chunk-data"]
+	node2["create-embeddings"]
+	node3["evaluate"]
+	node4["extract-metadata"]
+	node5["fetch-metadata"]
+	node6["fetch-supporting-docs"]
+	node7["generate-testset"]
+	node8["run-rag-pipeline"]
+	node9["upload-to-docstore"]
+	node1-->node2
+	node2-->node9
+	node4-->node1
+	node5-->node4
+	node5-->node6
+	node6-->node1
+	node7-->node8
+	node8-->node3
+	node9-->node8
+	node10["data/evaluation-sets.dvc"]
+	node11["data/synthetic-datasets.dvc"]
 ```
-
 > Note: To re-run the `fetch-supporting-docs` stage of the pipeline you will need to request access to the [Legilo](https://legilo.eds-infra.ceh.ac.uk/) service from the EDS dev team and provide your `username` and `password` in a `.env` file.
 
 ## Running Experiments
