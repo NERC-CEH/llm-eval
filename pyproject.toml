@@ -46,3 +46,6 @@ line-length = 88
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+- [tool.setuptools]
+- py-modules = []
