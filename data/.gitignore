@@ -1,0 +1,15 @@
+/synthetic-datasets
+/evaluation-sets
+/eidc_metadata.json
+/prepared_data.json
+/prepared_eidc_metadata.json
+/extracted_metadata.json
+/chunked_data.json
+/chunked_embeddings.json
+/embeddings.json
+/chroma-data
+/evaluation_data.csv
+/eidc_rag_test_sample.csv
+/supporting-docs.json
+/metrics.json
+/eval.png
