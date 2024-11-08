@@ -4,6 +4,10 @@ import shutil
 import uuid
 from argparse import ArgumentParser
 
+__import__("pysqlite3")
+import sys
+
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import chromadb
 from chromadb.utils import embedding_functions
 from chromadb.utils.batch_utils import create_batches
@@ -44,7 +48,7 @@ def main(
                 embeddings=batch[1],
                 ids=batch[0],
             )
-            
+
 
 if __name__ == "__main__":
     parser = ArgumentParser("prepare_data.py")
