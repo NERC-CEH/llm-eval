@@ -17,6 +17,7 @@ dependencies = [
     "ragas == 0.1.10",
     "nltk == 3.9.1",
     "nbformat == 4.2.0",
+    "unsloth == 2024.10.7",
 ]
 
 [project.optional-dependencies]
