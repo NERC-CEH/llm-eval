@@ -28,28 +28,20 @@ def chunk_metadata_value(
 
 
 def chunk_metadata_file(
-    file: str, chunk_size: int, overlap: int, sample_size: int
+    file: str, chunk_size: int, overlap: int
 ) -> List[Dict[str, str]]:
     chunked_metadata = []
     with open(file) as f:
         json_data = json.load(f)
-        count = 0
         for metadata in json_data:
             chunked_metadata.extend(chunk_metadata_value(metadata, chunk_size, overlap))
-            count += 1
-            if count == sample_size:
-                break
     return chunked_metadata
 
 
-def main(
-    files: List[str], ouput_file: str, chunk_size: int, overlap: int, sample_size: int
-) -> None:
+def main(files: List[str], ouput_file: str, chunk_size: int, overlap: int) -> None:
     all_chunked_metadata = []
     for file in files:
-        all_chunked_metadata.extend(
-            chunk_metadata_file(file, chunk_size, overlap, sample_size)
-        )
+        all_chunked_metadata.extend(chunk_metadata_file(file, chunk_size, overlap))
     with open(ouput_file, "w") as f:
         json.dump(all_chunked_metadata, f, indent=4)
 
@@ -81,14 +73,6 @@ if __name__ == "__main__":
         nargs="?",
         const=100,
     )
-    parser.add_argument(
-        "-s",
-        "--sample",
-        help="Only generate chunks for n datasets",
-        type=int,
-        nargs="?",
-        const=0,
-    )
     args = parser.parse_args()
     assert args.chunk > args.overlap
-    main(args.input_files, args.output, args.chunk, args.overlap, args.sample)
+    main(args.input_files, args.output, args.chunk, args.overlap)
