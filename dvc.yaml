@@ -1,6 +1,6 @@
 stages:
   fetch-metadata:
-    cmd: python scripts/fetch_eidc_metadata.py ${files.metadata}
+    cmd: python scripts/fetch_eidc_metadata.py ${files.metadata} -s ${sub-sample}
     deps:
     - scripts/fetch_eidc_metadata.py
     outs:
@@ -20,7 +20,7 @@ stages:
     outs:
     - ${files.extracted}
   chunk-data:
-    cmd: python scripts/chunk_data.py -o ${files.chunked} -c ${hp.chunk-size} -ol ${hp.overlap} -s ${sample-size} ${files.extracted} ${files.supporting-docs}
+    cmd: python scripts/chunk_data.py -o ${files.chunked} -c ${hp.chunk-size} -ol ${hp.overlap} ${files.extracted} ${files.supporting-docs}
     deps:
     - ${files.extracted}
     - ${files.supporting-docs}

@@ -16,7 +16,7 @@ files:
   eval-set: data/evaluation_data.csv
   metrics: data/metrics.json
   eval-plot: data/eval.png
-sample-size: 10 # sample size of 0 will process all data
+sub-sample: 3 # sample size of 0 will process all data
 rag:
   model: llama3.1
   prompt: >-
