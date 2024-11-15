@@ -2,21 +2,22 @@
 name = "llm-eval"
 version = "0.1.0"
 dependencies = [
-    "plotly == 5.24.1",
-    "pandas == 2.2.3",
+    "plotly == 5.22.0",
+    "pandas == 2.2.2",
     "numpy == 1.26.4",
     "kaleido == 0.2.1",
     "dvc[s3] == 3.2.0 ",
     "bitsandbytes == 0.44.1",
-    "haystack-ai == 2.6.0",
+    "haystack-ai == 2.2.3",
     "accelerate == 1.0.0",
-    "sentence-transformers == 3.1.1",
-    "chromadb == 0.5.15",
+    "sentence-transformers == 3.0.1",
+    "chromadb == 0.5.3",
     "ollama-haystack == 0.0.7",
-    "chroma-haystack == 0.22.1",
+    "chroma-haystack == 0.18.0",
     "ragas == 0.1.10",
-    "nltk == 3.9.1",
-    "nbformat == 4.2.0",
+    "nltk == 3.8.1",
+    "nbformat == 5.10.4",
+    "langchain == 0.2.7",
 ]
 
 [project.optional-dependencies]
