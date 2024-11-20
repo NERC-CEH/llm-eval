@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   fetch-metadata:
-    cmd: python scripts/fetch_eidc_metadata.py data/eidc_metadata.json -s 3
+    cmd: python scripts/fetch_eidc_metadata.py data/eidc_metadata.json -s 2000
     deps:
     - path: scripts/fetch_eidc_metadata.py
       hash: md5
@@ -10,8 +10,8 @@ stages:
     outs:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 068ae066ea08ee369c505c8640481cf6
-      size: 125674
+      md5: 828442e08598fb258894f9d414943330
+      size: 12247809
   prepare:
     cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
     deps:
@@ -33,8 +33,8 @@ stages:
     deps:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 068ae066ea08ee369c505c8640481cf6
-      size: 125674
+      md5: 828442e08598fb258894f9d414943330
+      size: 12247809
     - path: scripts/extract_metadata.py
       hash: md5
       md5: e66f21369c5106eaaad4476612c6fb5e
@@ -42,20 +42,20 @@ stages:
     outs:
     - path: data/extracted_metadata.json
       hash: md5
-      md5: e71f887d993834e3bda1eb00e711e724
-      size: 7005
+      md5: f6123510b2b337bc8a2b6a7180e54b36
+      size: 4606527
   chunk-data:
     cmd: python scripts/chunk_data.py -o data/chunked_data.json -c 500 -ol 100 data/extracted_metadata.json
       data/supporting-docs.json
     deps:
     - path: data/extracted_metadata.json
       hash: md5
-      md5: e71f887d993834e3bda1eb00e711e724
-      size: 7005
+      md5: f6123510b2b337bc8a2b6a7180e54b36
+      size: 4606527
     - path: data/supporting-docs.json
       hash: md5
-      md5: bdab1ea8df4a87aa3d314044eb2eaa0a
-      size: 188762
+      md5: 9144618bb329984fcd622811a7eac3bb
+      size: 72280322
     - path: scripts/chunk_data.py
       hash: md5
       md5: e8de02d6b14c8fc22533d0becfb7d35d
@@ -63,15 +63,15 @@ stages:
     outs:
     - path: data/chunked_data.json
       hash: md5
-      md5: a01ff8ed4d429203d6903466d26937ff
-      size: 320740
+      md5: 39990a40f23e70dc78424ce0bc408983
+      size: 124484286
   create-embeddings:
     cmd: python scripts/create_embeddings.py data/chunked_data.json data/embeddings.json
     deps:
     - path: data/chunked_data.json
       hash: md5
-      md5: a01ff8ed4d429203d6903466d26937ff
-      size: 320740
+      md5: 39990a40f23e70dc78424ce0bc408983
+      size: 124484286
     - path: scripts/create_embeddings.py
       hash: md5
       md5: d9282fc92ed400855c4fc2a290289f14
@@ -79,62 +79,62 @@ stages:
     outs:
     - path: data/embeddings.json
       hash: md5
-      md5: 363e3eaf7f8baddf9aa2e83f45f074b1
-      size: 4345553
+      md5: 8971ce1f4d4ade1507b9a469656c36d0
+      size: 1706778742
   upload-to-docstore:
     cmd: python scripts/upload_to_docstore.py data/embeddings.json -o data/chroma-data
       -em all-MiniLM-L6-v2 -c eidc-data
     deps:
     - path: data/embeddings.json
       hash: md5
-      md5: 363e3eaf7f8baddf9aa2e83f45f074b1
-      size: 4345553
+      md5: 8971ce1f4d4ade1507b9a469656c36d0
+      size: 1706778742
     - path: scripts/upload_to_docstore.py
       hash: md5
-      md5: 7b9433047ff175d5e6af8d6056caf05b
-      size: 1931
+      md5: 645bdeb372bc79fa7a2e3d8a9eac0d4c
+      size: 2330
     outs:
     - path: data/chroma-data
       hash: md5
-      md5: 39b81f6d319a02523fbc356dd667b920.dir
-      size: 5702372
-      nfiles: 5
+      md5: 7d158df1ea32a09783259b756f468666.dir
+      size: 1126480472
+      nfiles: 6
   run-rag-pipeline:
-    cmd: python scripts/run_rag_pipeline.py data/eidc_rag_test_sample.csv data/evaluation_data.csv
+    cmd: python scripts/run_rag_pipeline.py data/eidc_rag_test_set.csv data/evaluation_data.csv
       data/chroma-data -c eidc-data
     deps:
     - path: data/chroma-data
       hash: md5
-      md5: 39b81f6d319a02523fbc356dd667b920.dir
-      size: 5702372
-      nfiles: 5
-    - path: data/eidc_rag_test_sample.csv
+      md5: 7d158df1ea32a09783259b756f468666.dir
+      size: 1126480472
+      nfiles: 6
+    - path: data/eidc_rag_test_set.csv
       hash: md5
-      md5: a371d83c5822d256286e80d64d58c3fe
-      size: 7524
+      md5: f301e759e74ce5e71b50e04993ec8c88
+      size: 144597
     - path: scripts/run_rag_pipeline.py
       hash: md5
-      md5: ea2b8d94ee42499870d925f916982e8a
-      size: 3781
+      md5: 0be13da9adedc1c0dad4837523893061
+      size: 3869
     outs:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: a4470a84d2de8b1d04c7d2dfd8b5f807
-      size: 9859
+      md5: 61fc8879585c0385277ebdc8a6b82420
+      size: 203253
   generate-testset:
-    cmd: cp data/synthetic-datasets/eidc_rag_test_sample.csv data/
+    cmd: cp data/synthetic-datasets/eidc_rag_test_set.csv data/
     outs:
-    - path: data/eidc_rag_test_sample.csv
+    - path: data/eidc_rag_test_set.csv
       hash: md5
-      md5: a371d83c5822d256286e80d64d58c3fe
-      size: 7524
+      md5: f301e759e74ce5e71b50e04993ec8c88
+      size: 144597
   fetch-supporting-docs:
     cmd: python scripts/fetch_supporting_docs.py data/eidc_metadata.json data/supporting-docs.json
     deps:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 068ae066ea08ee369c505c8640481cf6
-      size: 125674
+      md5: 828442e08598fb258894f9d414943330
+      size: 12247809
     - path: scripts/fetch_supporting_docs.py
       hash: md5
       md5: 02b94a2cc7bff711784cbdec3650b618
@@ -142,16 +142,16 @@ stages:
     outs:
     - path: data/supporting-docs.json
       hash: md5
-      md5: bdab1ea8df4a87aa3d314044eb2eaa0a
-      size: 188762
+      md5: 9144618bb329984fcd622811a7eac3bb
+      size: 72280322
   evaluate:
     cmd: python scripts/evaluate.py data/evaluation_data.csv -m data/metrics.json
       -img data/eval.png
     deps:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: a4470a84d2de8b1d04c7d2dfd8b5f807
-      size: 9859
+      md5: 61fc8879585c0385277ebdc8a6b82420
+      size: 203253
     - path: scripts/evaluate.py
       hash: md5
       md5: a9c4c04157007c12c068aacdf5e099a9
@@ -159,9 +159,9 @@ stages:
     outs:
     - path: data/eval.png
       hash: md5
-      md5: 981434fb5f4e61ce4288a4431f70bcc1
-      size: 67852
+      md5: 2a1630782c103077959097db4e06b7d8
+      size: 83362
     - path: data/metrics.json
       hash: md5
-      md5: 20efb8ebf0d6908f0ee7b35dbff2e7c7
-      size: 242
+      md5: dfdf0d0bf1519ccfa78f95263d63c231
+      size: 285

@@ -4,8 +4,13 @@ import shutil
 import uuid
 from argparse import ArgumentParser
 
+__import__("pysqlite3")
+import sys
+
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import chromadb
 from chromadb.utils import embedding_functions
+from chromadb.utils.batch_utils import create_batches
 
 
 def main(
@@ -33,7 +38,16 @@ def main(
         collection = client.create_collection(
             name=collection_name, embedding_function=func
         )
-        collection.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
+        batches = create_batches(
+            api=client, ids=ids, documents=docs, embeddings=embs, metadatas=metas
+        )
+        for batch in batches:
+            collection.add(
+                documents=batch[3],
+                metadatas=batch[2],
+                embeddings=batch[1],
+                ids=batch[0],
+            )
 
 
 if __name__ == "__main__":
