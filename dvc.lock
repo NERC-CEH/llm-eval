@@ -5,8 +5,8 @@ stages:
     deps:
     - path: scripts/fetch_eidc_metadata.py
       hash: md5
-      md5: a564cb0804b482ef09658f0cb4a0a705
-      size: 941
+      md5: 82907434d9521996e30014df01bbba8e
+      size: 964
     outs:
     - path: data/eidc_metadata.json
       hash: md5
@@ -45,8 +45,8 @@ stages:
       md5: f6123510b2b337bc8a2b6a7180e54b36
       size: 4606527
   chunk-data:
-    cmd: python scripts/chunk_data.py -o data/chunked_data.json -c 500 -ol 100 data/extracted_metadata.json
-      data/supporting-docs.json
+    cmd: python scripts/chunk_data.py -o data/chunked_data.json -c 250 -ol 75 data/extracted_metadata.json
+      data/supporting-docs.json -m 250
     deps:
     - path: data/extracted_metadata.json
       hash: md5
@@ -58,8 +58,8 @@ stages:
       size: 72280322
     - path: scripts/chunk_data.py
       hash: md5
-      md5: e8de02d6b14c8fc22533d0becfb7d35d
-      size: 2198
+      md5: 3ad449140b03e1c2904b22a5b401a12e
+      size: 2705
     outs:
     - path: data/chunked_data.json
       hash: md5
@@ -74,8 +74,8 @@ stages:
       size: 124484286
     - path: scripts/create_embeddings.py
       hash: md5
-      md5: d9282fc92ed400855c4fc2a290289f14
-      size: 867
+      md5: fa4627c83a65af2e3ea9b2b749f1b29d
+      size: 952
     outs:
     - path: data/embeddings.json
       hash: md5
@@ -154,8 +154,8 @@ stages:
       size: 203253
     - path: scripts/evaluate.py
       hash: md5
-      md5: a9c4c04157007c12c068aacdf5e099a9
-      size: 2634
+      md5: 4154acf8e74c1d8bcd0b0da72af038e0
+      size: 2728
     outs:
     - path: data/eval.png
       hash: md5

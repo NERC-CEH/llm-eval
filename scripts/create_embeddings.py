@@ -1,6 +1,8 @@
+import gc
 import json
 from argparse import ArgumentParser
 
+import torch
 from sentence_transformers import SentenceTransformer
 from torch import Tensor
 from tqdm import tqdm
@@ -16,6 +18,8 @@ def main(input_file: str, output_file: str) -> None:
         data = json.load(input)
         for chunk in tqdm(data):
             chunk["embedding"] = create_embedding(chunk["chunk"]).tolist()
+            gc.collect()
+            torch.cuda.empty_cache()
         json.dump(data, output)
 
 

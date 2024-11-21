@@ -1,5 +1,6 @@
 import json
 from argparse import ArgumentParser
+from pathlib import Path
 
 import nest_asyncio
 import pandas as pd
@@ -44,16 +45,18 @@ def main(eval_dataset: str, metric_output: str, image_output: str) -> None:
         run_config=RunConfig(max_workers=1),
     )
     result_df = result.to_pandas()
-    pio.templates.default = "gridon"
-    fig = go.Figure()
 
-    with open(metric_output, "w") as f:
+    Path(metric_output).parent.mkdir(parents=True, exist_ok=True)
+    with open(metric_output, "w+") as f:
         json.dump(result, f)
     metrics = [
         metric
         for metric in result_df.columns.to_list()
         if metric not in ["question", "ground_truth", "answer", "contexts"]
     ]
+
+    pio.templates.default = "gridon"
+    fig = go.Figure()
 
     for metric in metrics:
         fig.add_trace(
@@ -66,7 +69,7 @@ def main(eval_dataset: str, metric_output: str, image_output: str) -> None:
             )
         )
     fig.update_yaxes(range=[-0.02, 1.02])
-    with open(image_output, "wb") as f:
+    with open(image_output, "wb+") as f:
         f.write(fig.to_image(format="png"))
 
 

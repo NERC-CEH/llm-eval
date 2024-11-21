@@ -3,19 +3,22 @@ from argparse import ArgumentParser
 from typing import Any, Dict, List
 
 
-def chunk_value(value: str, chunk_size: int, overlap: int) -> List[str]:
+def chunk_value(
+    value: str, chunk_size: int, overlap: int, max_length: int
+) -> List[str]:
     chunks = []
     start = 0
-    while start < len(value):
+    end = max_length if len(value) > max_length > 0 else len(value)
+    while start < end:
         chunks.append(value[start : (start + chunk_size)])
         start += chunk_size - overlap
     return chunks
 
 
 def chunk_metadata_value(
-    metada_value: str, chunk_size: int, overlap: int
+    metada_value: str, chunk_size: int, overlap: int, max_length: int
 ) -> List[Dict[str, Any]]:
-    chunks = chunk_value(metada_value["value"], chunk_size, overlap)
+    chunks = chunk_value(metada_value["value"], chunk_size, overlap, max_length)
     return [
         {
             "chunk": chunks[i],
@@ -28,20 +31,26 @@ def chunk_metadata_value(
 
 
 def chunk_metadata_file(
-    file: str, chunk_size: int, overlap: int
+    file: str, chunk_size: int, overlap: int, max_length: int
 ) -> List[Dict[str, str]]:
     chunked_metadata = []
     with open(file) as f:
         json_data = json.load(f)
         for metadata in json_data:
-            chunked_metadata.extend(chunk_metadata_value(metadata, chunk_size, overlap))
+            chunked_metadata.extend(
+                chunk_metadata_value(metadata, chunk_size, overlap, max_length)
+            )
     return chunked_metadata
 
 
-def main(files: List[str], ouput_file: str, chunk_size: int, overlap: int) -> None:
+def main(
+    files: List[str], ouput_file: str, chunk_size: int, overlap: int, max_length: int
+) -> None:
     all_chunked_metadata = []
     for file in files:
-        all_chunked_metadata.extend(chunk_metadata_file(file, chunk_size, overlap))
+        all_chunked_metadata.extend(
+            chunk_metadata_file(file, chunk_size, overlap, max_length)
+        )
     with open(ouput_file, "w") as f:
         json.dump(all_chunked_metadata, f, indent=4)
 
@@ -73,6 +82,15 @@ if __name__ == "__main__":
         nargs="?",
         const=100,
     )
+    parser.add_argument(
+        "-m",
+        "--max_length",
+        help="""Maximum length of data in characters - meant for truncating large 
+        strings in testing. 0 defaults to all data""",
+        type=int,
+        nargs="?",
+        const=0,
+    )
     args = parser.parse_args()
     assert args.chunk > args.overlap
-    main(args.input_files, args.output, args.chunk, args.overlap)
+    main(args.input_files, args.output, args.chunk, args.overlap, args.max_length)
