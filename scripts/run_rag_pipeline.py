@@ -35,8 +35,6 @@ def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
 
     prompt_builder = PromptBuilder(template=template)
 
-    model_name = "llama3.1"
-
     print(f"Setting up model ({model_name})...")
     llm = OllamaGenerator(
         model=model_name,
@@ -85,11 +83,15 @@ def query_pipeline(questions: List[str], rag_pipe: Pipeline) -> Tuple[str, List[
 
 
 def main(
-    test_data_file: str, ouput_file: str, doc_store_path: str, collection_name: str
+    test_data_file: str,
+    ouput_file: str,
+    doc_store_path: str,
+    collection_name: str,
+    model: str,
 ) -> None:
     shutil.copytree(doc_store_path, TMP_DOC_PATH)
 
-    rag_pipe = build_rag_pipeline("llama3.1", collection_name)
+    rag_pipe = build_rag_pipeline(model, collection_name)
 
     df = pd.read_csv(test_data_file)
     df.drop(columns=["rating", "contexts"], inplace=True)
@@ -106,15 +108,18 @@ def main(
 if __name__ == "__main__":
     parser = ArgumentParser("run_rag_pipeline.py")
     parser.add_argument(
-        "test_data_file",
+        "-i",
+        "--input",
         help="File containing test queries to generate response from the RAG pipeline.",
     )
     parser.add_argument(
-        "output_file",
+        "-o",
+        "--output",
         help="File to output results to.",
     )
     parser.add_argument(
-        "doc_store_path",
+        "-ds",
+        "--doc_store",
         help="Path to the doc store.",
     )
     parser.add_argument(
@@ -123,5 +128,11 @@ if __name__ == "__main__":
         help="Collection name in doc store.",
         default="eidc-data",
     )
+    parser.add_argument(
+        "-m",
+        "--model",
+        help="Model to use in RAG pipeline.",
+        default="llama3.1",
+    )
     args = parser.parse_args()
-    main(args.test_data_file, args.output_file, args.doc_store_path, args.collection)
+    main(args.input, args.output, args.doc_store, args.collection, args.model)

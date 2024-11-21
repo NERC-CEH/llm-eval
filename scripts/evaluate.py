@@ -55,7 +55,6 @@ def main(eval_dataset: str, metric_output: str, image_output: str) -> None:
         if metric not in ["question", "ground_truth", "answer", "contexts"]
     ]
 
-
     pio.templates.default = "gridon"
     fig = go.Figure()
 

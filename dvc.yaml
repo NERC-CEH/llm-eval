@@ -44,11 +44,11 @@ stages:
     outs:
     - ${files.doc-store}
   generate-testset:
-    cmd: head -n 2 data/synthetic-datasets/eidc_rag_test_sample.csv > ${files.test-set}
+    cmd: head -n ${test-set-size} data/synthetic-datasets/eidc_rag_test_sample.csv > ${files.test-set}
     outs: 
     - ${files.test-set}
   run-rag-pipeline:
-    cmd: python scripts/run_rag_pipeline.py ${files.test-set} ${files.eval-set} ${files.doc-store} -c ${doc-store.collection}
+    cmd: python scripts/run_rag_pipeline.py -i ${files.test-set} -o ${files.eval-set} -ds ${files.doc-store} -c ${doc-store.collection} -m ${rag.model}
     deps:
     - ${files.test-set}
     - ${files.doc-store}

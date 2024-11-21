@@ -1,6 +1,7 @@
+import gc
 import json
 from argparse import ArgumentParser
-import gc
+
 import torch
 from sentence_transformers import SentenceTransformer
 from torch import Tensor

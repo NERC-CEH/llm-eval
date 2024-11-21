@@ -3,7 +3,9 @@ from argparse import ArgumentParser
 from typing import Any, Dict, List
 
 
-def chunk_value(value: str, chunk_size: int, overlap: int, max_length: int) -> List[str]:
+def chunk_value(
+    value: str, chunk_size: int, overlap: int, max_length: int
+) -> List[str]:
     chunks = []
     start = 0
     end = max_length if len(value) > max_length > 0 else len(value)
@@ -35,14 +37,20 @@ def chunk_metadata_file(
     with open(file) as f:
         json_data = json.load(f)
         for metadata in json_data:
-            chunked_metadata.extend(chunk_metadata_value(metadata, chunk_size, overlap, max_length))
+            chunked_metadata.extend(
+                chunk_metadata_value(metadata, chunk_size, overlap, max_length)
+            )
     return chunked_metadata
 
 
-def main(files: List[str], ouput_file: str, chunk_size: int, overlap: int, max_length: int) -> None:
+def main(
+    files: List[str], ouput_file: str, chunk_size: int, overlap: int, max_length: int
+) -> None:
     all_chunked_metadata = []
     for file in files:
-        all_chunked_metadata.extend(chunk_metadata_file(file, chunk_size, overlap, max_length))
+        all_chunked_metadata.extend(
+            chunk_metadata_file(file, chunk_size, overlap, max_length)
+        )
     with open(ouput_file, "w") as f:
         json.dump(all_chunked_metadata, f, indent=4)
 
