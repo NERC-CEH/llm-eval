@@ -1,3 +1,5 @@
+metrics: 
+- data/metrics.json
 stages:
   fetch-metadata:
     cmd: python scripts/fetch_eidc_metadata.py ${files.metadata} -s ${sub-sample}
@@ -20,7 +22,7 @@ stages:
     outs:
     - ${files.extracted}
   chunk-data:
-    cmd: python scripts/chunk_data.py -o ${files.chunked} -c ${hp.chunk-size} -ol ${hp.overlap} ${files.extracted} ${files.supporting-docs}
+    cmd: python scripts/chunk_data.py -o ${files.chunked} -c ${hp.chunk-size} -ol ${hp.overlap} ${files.extracted} ${files.supporting-docs} -m ${max-length}
     deps:
     - ${files.extracted}
     - ${files.supporting-docs}
@@ -42,7 +44,7 @@ stages:
     outs:
     - ${files.doc-store}
   generate-testset:
-    cmd: cp data/synthetic-datasets/eidc_rag_test_sample.csv data/
+    cmd: head -n 2 data/synthetic-datasets/eidc_rag_test_sample.csv > ${files.test-set}
     outs: 
     - ${files.test-set}
   run-rag-pipeline:
@@ -61,5 +63,3 @@ stages:
     outs:
     - ${files.metrics}
     - ${files.eval-plot}
-metrics: 
-- ${files.metrics}
