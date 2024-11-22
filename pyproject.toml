@@ -18,6 +18,7 @@ dependencies = [
     "nltk == 3.9.1",
     "nbformat == 4.2.0",
     "pygit2 == 1.14.1",
+    "pysqlite3 == 0.5.4",
 ]
 
 [project.optional-dependencies]

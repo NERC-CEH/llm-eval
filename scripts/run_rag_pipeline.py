@@ -1,8 +1,9 @@
 import shutil
+import sys
 from argparse import ArgumentParser
 from typing import Any, Dict, List, Tuple
+
 __import__("pysqlite3")
-import sys
 sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import pandas as pd
 from haystack import Pipeline
@@ -90,10 +91,14 @@ def main(
     doc_store_path: str,
     collection_name: str,
     model: str,
+    pipeline_file: str,
 ) -> None:
     shutil.copytree(doc_store_path, TMP_DOC_PATH)
 
     rag_pipe = build_rag_pipeline(model, collection_name)
+
+    with open(pipeline_file, "w") as f:
+        rag_pipe.dump(f)
 
     df = pd.read_csv(test_data_file)
     df.drop(columns=["rating", "contexts"], inplace=True)
@@ -136,5 +141,18 @@ if __name__ == "__main__":
         help="Model to use in RAG pipeline.",
         default="llama3.1",
     )
+    parser.add_argument(
+        "-p",
+        "--pipeline_file",
+        help="File to save the built RAG pipeline to.",
+        default="pipeline.yml",
+    )
     args = parser.parse_args()
-    main(args.input, args.output, args.doc_store, args.collection, args.model)
+    main(
+        args.input,
+        args.output,
+        args.doc_store,
+        args.collection,
+        args.model,
+        args.pipeline_file,
+    )
