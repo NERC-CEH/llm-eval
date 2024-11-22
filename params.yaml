@@ -16,6 +16,7 @@ files:
   eval-set: data/evaluation_data.csv
   metrics: data/metrics.json
   eval-plot: data/eval.png
+  pipeline: data/pipeline.yml
 sub-sample: 0 # sample n datasets for testing (0 will use all datasets)
 max-length: 0 # truncate longer texts for testing (0 will use all data)
 test-set-size: 101 # reduce the size of the test set for faster testing
