@@ -21,7 +21,7 @@ def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
     document_store = ChromaDocumentStore(
         collection_name=collection_name, persist_path=TMP_DOC_PATH
     )
-    retriever = ChromaQueryTextRetriever(document_store, top_k=3)
+    retriever = ChromaQueryTextRetriever(document_store, top_k=5)
     print("Creating prompt template...")
 
     template = """
@@ -32,8 +32,11 @@ def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
     The EIDC is hosted by UKCEH (UK Centre for Ecology and Hydrology).
     Your answer should be as faithful as possible to the information provided by the retrieved documents.
     Do not use your own knowledge to answer the question, only the information in the retrieved documents.
-    Do not refer to "retrieved documents" in your answer, instead use phrases like "available information".
-    Provide a citation to the relevant chunk_id used to generate each part of your answer.
+    Do not refer to "retrieved documents" in your answer, instead use phrases like "available information" or "available information from the EIDC".
+    Provide a citation to the relevant retrieved document used to generate each part of your answer.
+    Citations should be inline and use the following markdown format:
+    `[n](https://catalogue.ceh.ac.uk/documents/{dataset_id})`
+    where n is the nth reference in your answer and {dataset_id} is the dataset_id of the referenced retrieved document.
 
     Question: {{query}}
 
