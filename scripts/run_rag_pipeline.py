@@ -1,3 +1,4 @@
+import os
 import shutil
 import sys
 from argparse import ArgumentParser
@@ -24,14 +25,29 @@ def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
     print("Creating prompt template...")
 
     template = """
-    Given the following information, answer the question.
+    You are part of a retrieval augmented generative pipeline.
+    Your task is to provide an answer to a question based on a given set of retrieved documents.
+    The retrieved documents will be given in JSON format.
+    The retrieved documents are chunks of information retrieved from datasets held in the EIDC (Environmental Information Data Centre). 
+    The EIDC is hosted by UKCEH (UK Centre for Ecology and Hydrology).
+    Your answer should be as faithful as possible to the information provided by the retrieved documents.
+    Do not use your own knowledge to answer the question, only the information in the retrieved documents.
+    Do not refer to "retrieved documents" in your answer, instead use phrases like "available information".
+    Provide a citation to the relevant chunk_id used to generate each part of your answer.
 
     Question: {{query}}
 
-    Context:
-    {% for document in documents %}
-        {{ document.content }}
-    {% endfor %}
+    "retrieved_documents": [{% for document in documents %}
+            {
+                content: "{{ document.content }}",
+                meta: {
+                    dataset_id: "{{ document.meta.id }}",
+                    source: "{{ document.meta.field }}",
+                    chunk_id: "{{ document.id }}"
+                }
+            }
+        {% endfor %}
+    ]
 
     Answer:
     """
@@ -41,7 +57,7 @@ def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
     print(f"Setting up model ({model_name})...")
     llm = OllamaGenerator(
         model=model_name,
-        generation_kwargs={"num_ctx": 16384},
+        generation_kwargs={"num_ctx": 16384, "temperature": 0.0},
         url="http://localhost:11434/api/generate",
     )
 
@@ -60,6 +76,7 @@ def build_rag_pipeline(model_name: str, collection_name: str) -> Pipeline:
     rag_pipe.connect("prompt_builder", "llm")
 
     rag_pipe.connect("llm.replies", "answer_builder.replies")
+    rag_pipe.connect("prompt_builder.prompt", "answer_builder.query")
     return rag_pipe
 
 
@@ -68,7 +85,6 @@ def run_query(query: str, pipeline: Pipeline) -> Dict[str, Any]:
         {
             "retriever": {"query": query},
             "prompt_builder": {"query": query},
-            "answer_builder": {"query": query},
         }
     )
 
@@ -93,6 +109,8 @@ def main(
     model: str,
     pipeline_file: str,
 ) -> None:
+    if os.path.exists(TMP_DOC_PATH):
+        shutil.rmtree(TMP_DOC_PATH)
     shutil.copytree(doc_store_path, TMP_DOC_PATH)
 
     rag_pipe = build_rag_pipeline(model, collection_name)
@@ -109,7 +127,7 @@ def main(
     df["contexts"] = contexts
     df.to_csv(ouput_file, index=False)
 
-    shutil.rmtree(TMP_DOC_PATH)
+    # shutil.rmtree(TMP_DOC_PATH)
 
 
 if __name__ == "__main__":
