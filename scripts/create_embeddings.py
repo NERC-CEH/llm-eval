@@ -1,11 +1,21 @@
 import gc
 import json
 from argparse import ArgumentParser
-from itertools import batched
+from itertools import islice
 
 import torch
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
+
+
+def batched(iterable, n, *, strict=False):
+    if n < 1:
+        raise ValueError('n must be at least one')
+    iterator = iter(iterable)
+    while batch := tuple(islice(iterator, n)):
+        if strict and len(batch) != n:
+            raise ValueError('batched(): incomplete batch')
+        yield batch
 
 
 def main(input_file: str, output_file: str, model_name: str) -> None:
