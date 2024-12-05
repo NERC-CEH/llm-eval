@@ -56,7 +56,7 @@ stages:
     outs:
     - ${files.doc-store}
   generate-testset:
-    cmd: python scripts/generate_synthetic_testset.py ${files.extracted} ${files.test-set}
+    cmd: python scripts/generate_synthetic_testset.py ${files.extracted} ${files.test-set} ${test-set-size}
     deps: 
     - ${files.extracted}
     - scripts/generate_synthetic_testset.py
