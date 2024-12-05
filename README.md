@@ -85,7 +85,31 @@ data/metrics.json  faithfulness        0.75      0.69375      -0.05625
 Path         Param          HEAD    workspace    Change
 params.yaml  hp.chunk-size  300     1000         700
 ```
-## Notes
+
+It is also possible to compare the results of all experiments:
+```shell
+dvc exp show --only-changed
+```
+Experiments can be remove using (`-A` flag removes all experiment, but individually experiment can be removed using their name or ID):
+```shell
+dvc exp remove -A
+```
+### Experiment Runner
+The repository includes a simple shell script that can be used as an experiment runner to test various different models:
+```shell
+./run-experiments.sh
+```
+This will run the dvc pipeline with various different llm model (check the shell scripts for details) and save the results as experiments. 
+
+An experiment for each model defined will be queued and run in the background. To check the status of the experiments:
+```shell
+dvc queue status
+```
+To check the output for an experiment currently running use:
+```shell
+dvc queue log $EXPERIMENT_NAME
+```
+## Other Notes
 
 ### DVC and CML
 Notes on the use of Data Version Control and Continuous Machine Learning:

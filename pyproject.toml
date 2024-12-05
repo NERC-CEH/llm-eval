@@ -18,6 +18,8 @@ dependencies = [
     "nltk == 3.8.1",
     "nbformat == 5.10.4",
     "langchain == 0.2.7",
+    "pygit2 == 1.14.1",
+    "pysqlite3 == 0.5.4",
 ]
 
 [project.optional-dependencies]

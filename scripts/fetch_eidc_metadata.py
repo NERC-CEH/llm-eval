@@ -17,7 +17,8 @@ def main(output_file: str, sample: int) -> None:
         },
     )
     json_data = res.json()
-    json_data["results"] = json_data["results"][:sample]
+    if sample > 0:
+        json_data["results"] = json_data["results"][:sample]
     with open(output_file, "w") as f:
         json.dump(json_data, f, indent=4)
 

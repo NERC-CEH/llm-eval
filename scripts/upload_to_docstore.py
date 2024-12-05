@@ -1,16 +1,24 @@
 import json
 import os
 import shutil
+import sys
 import uuid
 from argparse import ArgumentParser
+import logging
 
+__import__("pysqlite3")
+sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import chromadb
 from chromadb.utils import embedding_functions
+from chromadb.utils.batch_utils import create_batches
 
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def main(
     input_file: str, output_path: str, collection_name: str, embedding_model: str
 ) -> None:
+    logger.info(f"Uploading data ({input_file}) to chromaDB ({output_path}) in collection {collection_name}.")
     if os.path.exists(output_path):
         shutil.rmtree(output_path)
 
@@ -33,7 +41,20 @@ def main(
         collection = client.create_collection(
             name=collection_name, embedding_function=func
         )
-        collection.add(documents=docs, metadatas=metas, embeddings=embs, ids=ids)
+        
+        batches = create_batches(
+            api=client, ids=ids, documents=docs, embeddings=embs, metadatas=metas
+        )
+        logger.info(f"Uploading {len(docs)} document(s) to chroma in {len(batches)} batch(es).")
+        for batch in batches:
+            collection.add(
+                documents=batch[3],
+                metadatas=batch[2],
+                embeddings=batch[1],
+                ids=batch[0],
+            )
+        docs_in_col = collection.count()
+        logger.info(f"{docs_in_col} documents(s) are now in the {collection_name} collection")
 
 
 if __name__ == "__main__":

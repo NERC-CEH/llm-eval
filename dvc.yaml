@@ -1,3 +1,5 @@
+metrics: 
+- data/metrics.json
 stages:
   fetch-metadata:
     cmd: python scripts/fetch_eidc_metadata.py ${files.metadata} -s ${sub-sample}
@@ -20,7 +22,14 @@ stages:
     outs:
     - ${files.extracted}
   chunk-data:
-    cmd: python scripts/chunk_data.py -o ${files.chunked} -c ${hp.chunk-size} -ol ${hp.overlap} ${files.extracted} ${files.supporting-docs}
+    cmd: >-
+      python scripts/chunk_data.py 
+      -o ${files.chunked} 
+      -c ${hp.chunk-size} 
+      -ol ${hp.overlap} 
+      ${files.extracted} 
+      ${files.supporting-docs} 
+      -m ${max-length}
     deps:
     - ${files.extracted}
     - ${files.supporting-docs}
@@ -28,14 +37,19 @@ stages:
     outs:
     - ${files.chunked}
   create-embeddings:
-    cmd: python scripts/create_embeddings.py ${files.chunked} ${files.embeddings}
+    cmd: python scripts/create_embeddings.py ${files.chunked} ${files.embeddings} -m ${hp.embeddings-model}
     deps:
     - ${files.chunked}
     - scripts/create_embeddings.py
     outs:
     - ${files.embeddings}
   upload-to-docstore:
-    cmd: python scripts/upload_to_docstore.py ${files.embeddings} -o ${doc-store.files} -em ${hp.embeddings-model} -c ${doc-store.collection}
+    cmd: >-
+      python scripts/upload_to_docstore.py 
+      ${files.embeddings} 
+      -o ${doc-store.files} 
+      -em ${hp.embeddings-model} 
+      -c ${doc-store.collection}
     deps:
     - ${files.embeddings}
     - scripts/upload_to_docstore.py
@@ -49,13 +63,21 @@ stages:
     outs: 
     - ${files.test-set}
   run-rag-pipeline:
-    cmd: python scripts/run_rag_pipeline.py ${files.test-set} ${files.eval-set} ${files.doc-store} -c ${doc-store.collection}
+    cmd: >-
+      python scripts/run_rag_pipeline.py 
+      -i ${files.test-set} 
+      -o ${files.eval-set} 
+      -ds ${files.doc-store} 
+      -c ${doc-store.collection} 
+      -m ${rag.model} 
+      -p ${files.pipeline}
     deps:
     - ${files.test-set}
     - ${files.doc-store}
     - scripts/run_rag_pipeline.py
     outs: 
     - ${files.eval-set}
+    - ${files.pipeline}
   evaluate:
     cmd: python scripts/evaluate.py ${files.eval-set} -m ${files.metrics} -img ${files.eval-plot}
     deps:
@@ -64,5 +86,3 @@ stages:
     outs:
     - ${files.metrics}
     - ${files.eval-plot}
-metrics: 
-- ${files.metrics}
