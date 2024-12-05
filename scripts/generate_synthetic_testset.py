@@ -3,7 +3,6 @@ import logging
 from argparse import ArgumentParser
 from typing import List
 
-import nest_asyncio
 from langchain.docstore.document import Document
 from langchain_community.chat_models import ChatOllama
 from langchain_community.embeddings import OllamaEmbeddings

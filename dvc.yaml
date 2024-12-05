@@ -42,7 +42,10 @@ stages:
     outs:
     - ${files.doc-store}
   generate-testset:
-    cmd: cp data/synthetic-datasets/eidc_rag_test_sample.csv data/
+    cmd: python scripts/generate_synthetic_testset.py ${files.extracted} ${files.test-set}
+    deps: 
+    - ${files.extracted}
+    - scripts/generate_synthetic_testset.py
     outs: 
     - ${files.test-set}
   run-rag-pipeline:
