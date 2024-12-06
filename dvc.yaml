@@ -56,7 +56,7 @@ stages:
     outs:
     - ${files.doc-store}
   generate-testset:
-    cmd: head -n ${test-set-size} data/synthetic-datasets/eidc_rag_test_sample.csv > ${files.test-set}
+    cmd: head -n ${test-set-size} data/synthetic-datasets/eidc_rag_test_set.csv > ${files.test-set}
     outs: 
     - ${files.test-set}
   run-rag-pipeline:
