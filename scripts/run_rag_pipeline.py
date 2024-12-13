@@ -122,15 +122,16 @@ def main(
         rag_pipe.dump(f)
 
     df = pd.read_csv(test_data_file)
-    df.drop(columns=["rating", "contexts"], inplace=True)
+    df.drop(
+        columns=["contexts", "evolution_type", "metadata", "episode_done"],
+        inplace=True,
+    )
 
     answers, contexts = query_pipeline(df["question"], rag_pipe)
 
     df["answer"] = answers
     df["contexts"] = contexts
     df.to_csv(ouput_file, index=False)
-
-    # shutil.rmtree(TMP_DOC_PATH)
 
 
 if __name__ == "__main__":
