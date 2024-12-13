@@ -9,7 +9,7 @@ dependencies = [
     "bitsandbytes==0.44.1",
     "chroma-haystack==0.18.0",
     "chromadb==0.5.3",
-    "dvc[s3]==3.2.0",
+    "dvc[s3]==3.58.0",
     "haystack-ai==2.2.3",
     "kaleido==0.2.1",
     "langchain==0.2.7",

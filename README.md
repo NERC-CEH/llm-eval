@@ -36,10 +36,15 @@ Pull the data from the object store using DVC:
 dvc pull
 ```
 ### Working with the pipeline
-You should now be ready to re-run the pipeline:
+You should now be ready to run the pipeline:
 ```shell
 dvc repro
 ```
+This should only reproduce the pipeline, but only stages that have been modified will actually be re-run (see output whilst running). If you want to check that all stages of the pipeline are running correctly you can either user the `-f` flag with the above command to force DVC to re-run all stages of the pipeline or (as re-running with all the data can take several hours) run the convenience script `test-pipeline.sh`. This script will run the pipeline with a tiny subset of data as an experiment which should only take a copule of minutes:
+```shell
+./test-pipeline.sh
+```
+
 This pipeline is defined in [`dvc.yaml`](dvc.yaml) and can be viewed with the command:
 ```shell
 dvc dag
