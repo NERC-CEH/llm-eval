@@ -10,11 +10,11 @@ from tqdm import tqdm
 
 def batched(iterable, n, *, strict=False):
     if n < 1:
-        raise ValueError('n must be at least one')
+        raise ValueError("n must be at least one")
     iterator = iter(iterable)
     while batch := tuple(islice(iterator, n)):
         if strict and len(batch) != n:
-            raise ValueError('batched(): incomplete batch')
+            raise ValueError("batched(): incomplete batch")
         yield batch
 
 

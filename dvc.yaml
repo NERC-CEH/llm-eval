@@ -2,20 +2,20 @@ metrics:
 - data/metrics.json
 stages:
   fetch-metadata:
-    cmd: python scripts/fetch_eidc_metadata.py ${files.metadata} -s ${sub-sample}
+    cmd: uv run scripts/fetch_eidc_metadata.py ${files.metadata} -s ${sub-sample}
     deps:
     - scripts/fetch_eidc_metadata.py
     outs:
     - ${files.metadata}
   fetch-supporting-docs:
-    cmd: python scripts/fetch_supporting_docs.py ${files.metadata} ${files.supporting-docs}
+    cmd: uv run scripts/fetch_supporting_docs.py ${files.metadata} ${files.supporting-docs}
     deps:
     - ${files.metadata}
     - scripts/fetch_supporting_docs.py
     outs:
     - ${files.supporting-docs}
   extract-metadata:
-    cmd: python scripts/extract_metadata.py ${files.metadata} ${files.extracted}
+    cmd: uv run scripts/extract_metadata.py ${files.metadata} ${files.extracted}
     deps:
     - ${files.metadata}
     - scripts/extract_metadata.py
@@ -23,7 +23,7 @@ stages:
     - ${files.extracted}
   chunk-data:
     cmd: >-
-      python scripts/chunk_data.py 
+      uv run scripts/chunk_data.py 
       -o ${files.chunked} 
       -c ${hp.chunk-size} 
       -ol ${hp.overlap} 
@@ -37,7 +37,7 @@ stages:
     outs:
     - ${files.chunked}
   create-embeddings:
-    cmd: python scripts/create_embeddings.py ${files.chunked} ${files.embeddings} -m ${hp.embeddings-model}
+    cmd: uv run scripts/create_embeddings.py ${files.chunked} ${files.embeddings} -m ${hp.embeddings-model}
     deps:
     - ${files.chunked}
     - scripts/create_embeddings.py
@@ -45,7 +45,7 @@ stages:
     - ${files.embeddings}
   upload-to-docstore:
     cmd: >-
-      python scripts/upload_to_docstore.py 
+      uv run scripts/upload_to_docstore.py 
       ${files.embeddings} 
       -o ${doc-store.files} 
       -em ${hp.embeddings-model} 
@@ -56,7 +56,7 @@ stages:
     outs:
     - ${files.doc-store}
   generate-testset:
-    cmd: python scripts/generate_synthetic_testset.py ${files.extracted} ${files.test-set} ${test-set-size}
+    cmd: uv run scripts/generate_synthetic_testset.py ${files.extracted} ${files.test-set} ${test-set-size}
     deps: 
     - ${files.extracted}
     - scripts/generate_synthetic_testset.py
@@ -64,7 +64,7 @@ stages:
     - ${files.test-set}
   run-rag-pipeline:
     cmd: >-
-      python scripts/run_rag_pipeline.py 
+      uv run scripts/run_rag_pipeline.py 
       -i ${files.test-set} 
       -o ${files.eval-set} 
       -ds ${files.doc-store} 
@@ -79,7 +79,7 @@ stages:
     - ${files.eval-set}
     - ${files.pipeline}
   evaluate:
-    cmd: python scripts/evaluate.py ${files.eval-set} -m ${files.metrics} -img ${files.eval-plot}
+    cmd: uv run scripts/evaluate.py ${files.eval-set} -m ${files.metrics} -img ${files.eval-plot}
     deps:
     - ${files.eval-set}
     - scripts/evaluate.py

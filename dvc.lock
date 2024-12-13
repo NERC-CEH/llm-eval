@@ -1,7 +1,7 @@
 schema: '2.0'
 stages:
   fetch-metadata:
-    cmd: python scripts/fetch_eidc_metadata.py data/eidc_metadata.json -s 0
+    cmd: uv run scripts/fetch_eidc_metadata.py data/eidc_metadata.json -s 1
     deps:
     - path: scripts/fetch_eidc_metadata.py
       hash: md5
@@ -10,8 +10,8 @@ stages:
     outs:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 413f59888bf033c30cc27b84b1a3f40b
-      size: 12313041
+      md5: 452c8c7b54e9844fb8e0b1d6ddb09a45
+      size: 114938
   prepare:
     cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
     deps:
@@ -29,12 +29,12 @@ stages:
       md5: 7d2ae8d6a41a960592f30496eb498af7
       size: 4578493
   extract-metadata:
-    cmd: python scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
+    cmd: uv run scripts/extract_metadata.py data/eidc_metadata.json data/extracted_metadata.json
     deps:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 413f59888bf033c30cc27b84b1a3f40b
-      size: 12313041
+      md5: 452c8c7b54e9844fb8e0b1d6ddb09a45
+      size: 114938
     - path: scripts/extract_metadata.py
       hash: md5
       md5: e66f21369c5106eaaad4476612c6fb5e
@@ -42,20 +42,20 @@ stages:
     outs:
     - path: data/extracted_metadata.json
       hash: md5
-      md5: 226225c5bd64e15d803ba88560810c5a
-      size: 4629991
+      md5: 6870e7ecdde041bc8b62d2759ab745c3
+      size: 2381
   chunk-data:
-    cmd: python scripts/chunk_data.py  -o data/chunked_data.json  -c 250  -ol 75  data/extracted_metadata.json  data/supporting-docs.json  -m
-      0
+    cmd: uv run scripts/chunk_data.py  -o data/chunked_data.json  -c 250  -ol 75  data/extracted_metadata.json  data/supporting-docs.json  -m
+      250
     deps:
     - path: data/extracted_metadata.json
       hash: md5
-      md5: 226225c5bd64e15d803ba88560810c5a
-      size: 4629991
+      md5: 6870e7ecdde041bc8b62d2759ab745c3
+      size: 2381
     - path: data/supporting-docs.json
       hash: md5
-      md5: e2581aff9abe25942e8009214b88d0a5
-      size: 72680213
+      md5: 12837e5cbf10fbd75c6fa476d6423a41
+      size: 75646
     - path: scripts/chunk_data.py
       hash: md5
       md5: 3ad449140b03e1c2904b22a5b401a12e
@@ -63,77 +63,77 @@ stages:
     outs:
     - path: data/chunked_data.json
       hash: md5
-      md5: 9893d839409c8cf4561e99ab5f747f20
-      size: 177068127
+      md5: 2bd1ec3c646b46de10f43e87a711ec34
+      size: 2576
   create-embeddings:
-    cmd: python scripts/create_embeddings.py data/chunked_data.json data/embeddings.json
+    cmd: uv run scripts/create_embeddings.py data/chunked_data.json data/embeddings.json
       -m all-MiniLM-L6-v2
     deps:
     - path: data/chunked_data.json
       hash: md5
-      md5: 9893d839409c8cf4561e99ab5f747f20
-      size: 177068127
+      md5: 2bd1ec3c646b46de10f43e87a711ec34
+      size: 2576
     - path: scripts/create_embeddings.py
       hash: md5
-      md5: b0d8f7cb90f244e709656b1f38723e2d
+      md5: e7ed215d22d4b7e793b287587edb4ca3
       size: 1552
     outs:
     - path: data/embeddings.json
       hash: md5
-      md5: 5c8ca3cdde4d5bc559fa2e701ff090a8
-      size: 3754990368
+      md5: b1f2212503a684fdb5a293c6e75de91e
+      size: 61411
   upload-to-docstore:
-    cmd: python scripts/upload_to_docstore.py  data/embeddings.json  -o data/chroma-data  -em
+    cmd: uv run scripts/upload_to_docstore.py  data/embeddings.json  -o data/chroma-data  -em
       all-MiniLM-L6-v2  -c eidc-data
     deps:
     - path: data/embeddings.json
       hash: md5
-      md5: 5c8ca3cdde4d5bc559fa2e701ff090a8
-      size: 3754990368
+      md5: b1f2212503a684fdb5a293c6e75de91e
+      size: 61411
     - path: scripts/upload_to_docstore.py
       hash: md5
-      md5: 930456cedd43723c1d643ad90c146952
-      size: 2793
+      md5: d03e8153b2d91347be58ee386ed1ad13
+      size: 2766
     outs:
     - path: data/chroma-data
       hash: md5
-      md5: c06796220fbfe9db3b08b8439edf87b4.dir
-      size: 3081399131
-      nfiles: 6
+      md5: cfba735f17fcde2f1f71a09da7a30a8d.dir
+      size: 1848036
+      nfiles: 5
   run-rag-pipeline:
-    cmd: python scripts/run_rag_pipeline.py  -i data/eidc_rag_testset.csv  -o data/evaluation_data.csv  -ds
+    cmd: uv run scripts/run_rag_pipeline.py  -i data/eidc_rag_testset.csv  -o data/evaluation_data.csv  -ds
       data/chroma-data  -c eidc-data  -m llama3.1  -p data/pipeline.yml
     deps:
     - path: data/chroma-data
       hash: md5
-      md5: c06796220fbfe9db3b08b8439edf87b4.dir
-      size: 3081399131
-      nfiles: 6
+      md5: cfba735f17fcde2f1f71a09da7a30a8d.dir
+      size: 1848036
+      nfiles: 5
     - path: data/eidc_rag_testset.csv
       hash: md5
-      md5: 90d23c9bfcaddf9f152109a7b51e3151
-      size: 149155
+      md5: 4214ceab0a10aa2596bf8e2627573a52
+      size: 3091
     - path: scripts/run_rag_pipeline.py
       hash: md5
-      md5: 35eb5f65605242094a1581b92e9b2ef4
-      size: 5862
+      md5: bf69f41ec156575997ccb42a60aa0f84
+      size: 5784
     outs:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: 1b5f226c52d70bda7e2551d7778c1e89
-      size: 385945
+      md5: 5b98fd39f621d9fb3ca8911d872e01a9
+      size: 9088
     - path: data/pipeline.yml
       hash: md5
       md5: 70385a724cdf687c287596b8360e1448
       size: 3334
   generate-testset:
-    cmd: python scripts/generate_synthetic_testset.py data/extracted_metadata.json
-      data/eidc_rag_testset.csv 200
+    cmd: uv run scripts/generate_synthetic_testset.py data/extracted_metadata.json
+      data/eidc_rag_testset.csv 5
     deps:
     - path: data/extracted_metadata.json
       hash: md5
-      md5: 226225c5bd64e15d803ba88560810c5a
-      size: 4629991
+      md5: 6870e7ecdde041bc8b62d2759ab745c3
+      size: 2381
     - path: scripts/generate_synthetic_testset.py
       hash: md5
       md5: fdac8b2f28de8f3b4e5025ca47bb94ca
@@ -141,15 +141,15 @@ stages:
     outs:
     - path: data/eidc_rag_testset.csv
       hash: md5
-      md5: 90d23c9bfcaddf9f152109a7b51e3151
-      size: 149155
+      md5: 4214ceab0a10aa2596bf8e2627573a52
+      size: 3091
   fetch-supporting-docs:
-    cmd: python scripts/fetch_supporting_docs.py data/eidc_metadata.json data/supporting-docs.json
+    cmd: uv run scripts/fetch_supporting_docs.py data/eidc_metadata.json data/supporting-docs.json
     deps:
     - path: data/eidc_metadata.json
       hash: md5
-      md5: 413f59888bf033c30cc27b84b1a3f40b
-      size: 12313041
+      md5: 452c8c7b54e9844fb8e0b1d6ddb09a45
+      size: 114938
     - path: scripts/fetch_supporting_docs.py
       hash: md5
       md5: 02b94a2cc7bff711784cbdec3650b618
@@ -157,16 +157,16 @@ stages:
     outs:
     - path: data/supporting-docs.json
       hash: md5
-      md5: e2581aff9abe25942e8009214b88d0a5
-      size: 72680213
+      md5: 12837e5cbf10fbd75c6fa476d6423a41
+      size: 75646
   evaluate:
-    cmd: python scripts/evaluate.py data/evaluation_data.csv -m data/metrics.json
+    cmd: uv run scripts/evaluate.py data/evaluation_data.csv -m data/metrics.json
       -img data/eval.png
     deps:
     - path: data/evaluation_data.csv
       hash: md5
-      md5: 1b5f226c52d70bda7e2551d7778c1e89
-      size: 385945
+      md5: 5b98fd39f621d9fb3ca8911d872e01a9
+      size: 9088
     - path: scripts/evaluate.py
       hash: md5
       md5: 4154acf8e74c1d8bcd0b0da72af038e0
@@ -174,9 +174,9 @@ stages:
     outs:
     - path: data/eval.png
       hash: md5
-      md5: 3308b984c5168a996805443d25697026
-      size: 83001
+      md5: cfadd95cf4edf7b61180ea9d4f279ffc
+      size: 83632
     - path: data/metrics.json
       hash: md5
-      md5: 709909482614d6cb47c160506088f53e
-      size: 287
+      md5: 44fcb04a1a512c313ce25f50c9cb30e3
+      size: 277

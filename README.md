@@ -4,15 +4,26 @@ This repository contains a reproducible workflow setup using [DVC](https://dvc.o
 ## Requirements
 - [Ollama](https://ollama.com/download) ([`llama3.1`](https://ollama.com/library/llama3.1) and [`mistral-nemo`](https://ollama.com/library/mistral-nemo) models)
 - [Python 3.9+](https://www.python.org/downloads/)
+- [uv](https://docs.astral.sh/uv/)
 
 ## Getting started
 ### Setup
-First create a new virtual environment and install the required dependencies:
-```shell
-python -m venv .venv
-source .venv/bin/activate
-pip install .
+This project uses `uv` to manage python version and dependency. If you haven't got `uv` installed, the easiest way to it is using `pip`:
 ```
+pip install uv
+```
+This will allow you to use uv across projects. You can verify that the installation is successful by running:
+```
+uv --version
+```
+
+Once `uv` is installed you can use it to automatically download the appropriate version of python and create a virtual environment for running the project code. This can be done using:
+```
+uv sync
+```
+This will create a virtual environment in `.venv` and installed the necessary dependencies from `pyproject.toml`. Within the project, any commands that you wish to run can be preceeded by `uv run` to ensure that they run with the correct version of python and using the correct virtual environment.
+> **Note:** The remainder of this readme assume you have either activated the virtual environment created using `source .venv/bin/activate` or that you are prepending all commands with `uv run`.
+
 ### Configuration
 Next setup your local DVC configuration with your [Jasmin object store access key](https://help.jasmin.ac.uk/docs/short-term-project-storage/using-the-jasmin-object-store/#creating-an-access-key-and-secret):
 ```shell
