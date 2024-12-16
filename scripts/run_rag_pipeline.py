@@ -4,8 +4,6 @@ import sys
 from argparse import ArgumentParser
 from typing import Any, Dict, List, Tuple
 
-__import__("pysqlite3")
-sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
 import pandas as pd
 from haystack import Pipeline
 from haystack.components.builders import PromptBuilder

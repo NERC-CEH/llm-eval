@@ -4,15 +4,26 @@ This repository contains a reproducible workflow setup using [DVC](https://dvc.o
 ## Requirements
 - [Ollama](https://ollama.com/download) ([`llama3.1`](https://ollama.com/library/llama3.1) and [`mistral-nemo`](https://ollama.com/library/mistral-nemo) models)
 - [Python 3.9+](https://www.python.org/downloads/)
+- [uv](https://docs.astral.sh/uv/)
 
 ## Getting started
 ### Setup
-First create a new virtual environment and install the required dependencies:
-```shell
-python -m venv .venv
-source .venv/bin/activate
-pip install .
+This project uses `uv` to manage python version and dependency. If you haven't got `uv` installed, the easiest way to it is using `pip`:
 ```
+pip install uv
+```
+This will allow you to use uv across projects. You can verify that the installation is successful by running:
+```
+uv --version
+```
+
+Once `uv` is installed you can use it to automatically download the appropriate version of python and create a virtual environment for running the project code. This can be done using:
+```
+uv sync
+```
+This will create a virtual environment in `.venv` and installed the necessary dependencies from `pyproject.toml`. Within the project, any commands that you wish to run can be preceeded by `uv run` to ensure that they run with the correct version of python and using the correct virtual environment.
+> **Note:** The remainder of this readme assume you have either activated the virtual environment created using `source .venv/bin/activate` or that you are prepending all commands with `uv run`.
+
 ### Configuration
 Next setup your local DVC configuration with your [Jasmin object store access key](https://help.jasmin.ac.uk/docs/short-term-project-storage/using-the-jasmin-object-store/#creating-an-access-key-and-secret):
 ```shell
@@ -25,10 +36,15 @@ Pull the data from the object store using DVC:
 dvc pull
 ```
 ### Working with the pipeline
-You should now be ready to re-run the pipeline:
+You should now be ready to run the pipeline:
 ```shell
 dvc repro
 ```
+This should only reproduce the pipeline, but only stages that have been modified will actually be re-run (see output whilst running). If you want to check that all stages of the pipeline are running correctly you can either user the `-f` flag with the above command to force DVC to re-run all stages of the pipeline or (as re-running with all the data can take several hours) run the convenience script `test-pipeline.sh`. This script will run the pipeline with a tiny subset of data as an experiment which should only take a copule of minutes:
+```shell
+./test-pipeline.sh
+```
+
 This pipeline is defined in [`dvc.yaml`](dvc.yaml) and can be viewed with the command:
 ```shell
 dvc dag
