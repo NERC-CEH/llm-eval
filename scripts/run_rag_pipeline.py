@@ -120,8 +120,9 @@ def main(
         rag_pipe.dump(f)
 
     df = pd.read_csv(test_data_file)
+    df = df[df['appropriate'] == True]
     df.drop(
-        columns=["contexts", "evolution_type", "metadata", "episode_done"],
+        columns=["contexts", "evolution_type", "metadata", "episode_done", "appropriate", "reason"],
         inplace=True,
     )
 
