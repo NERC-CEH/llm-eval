@@ -37,7 +37,7 @@ stages:
     outs:
     - ${files.chunked}
   create-embeddings:
-    cmd: uv run scripts/create_embeddings.py ${files.chunked} ${files.embeddings} -m ${hp.embeddings-model}
+    cmd: uv run scripts/create_embeddings.py ${files.chunked} ${files.embeddings} -m ${hp.embeddings-model} -u
     deps:
     - ${files.chunked}
     - scripts/create_embeddings.py
