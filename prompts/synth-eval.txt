@@ -29,7 +29,7 @@ Examples:
     "question": "What was the average weed abundance across the surveyed lowland arable fields over the three-year period?",
     "ground_truth": "The answer to given question is not present in context"
     "appropriate": false,
-    "reason": "The question appears to be reffering to a specific dataset but it is not clear which one. The ground truth does not give an appropriate answer and the "
+    "reason": "The question appears to be reffering to a specific dataset but it is not clear which one. The ground_truth does not give an appropriate answer."
 }
 {
     "question": "What specific parameters are recorded for each tree within the surveyed 10m x 10m plots in the 'UK Environmental Change Network (ECN) woodland vegetation data' dataset?",
@@ -52,7 +52,7 @@ Examples:
     "question": "What are the estimated annual loads of nitrogen from non-agricultural sources to rivers in Scotland?",
     "ground_truth": "The answer to given question is not present in context",
     "appropriate": false,
-    "reason": "The ground truth does not provide an answer to the question."
+    "reason": "The ground_truth does not provide an answer to the question."
 }
 
 The question to assess is:
