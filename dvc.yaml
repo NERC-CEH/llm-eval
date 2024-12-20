@@ -37,7 +37,7 @@ stages:
     outs:
     - ${files.chunked}
   create-embeddings:
-    cmd: uv run scripts/create_embeddings.py ${files.chunked} ${files.embeddings} -m ${hp.embeddings-model}
+    cmd: uv run scripts/create_embeddings.py ${files.chunked} ${files.embeddings} -m ${hp.embeddings-model} -u
     deps:
     - ${files.chunked}
     - scripts/create_embeddings.py
@@ -62,17 +62,24 @@ stages:
     - scripts/generate_synthetic_testset.py
     outs: 
     - ${files.test-set}
+  evaluate-synthetic-testset:
+    cmd: uv run scripts/evaluate_synthetic_testset.py ${files.test-set} ${files.cleaned-test-set}
+    deps:
+    - ${files.test-set}
+    - scripts/evaluate_synthetic_testset.py
+    outs:
+    - ${files.cleaned-test-set}
   run-rag-pipeline:
     cmd: >-
       uv run scripts/run_rag_pipeline.py 
-      -i ${files.test-set} 
+      -i ${files.cleaned-test-set}
       -o ${files.eval-set} 
       -ds ${files.doc-store} 
       -c ${doc-store.collection} 
       -m ${rag.model} 
       -p ${files.pipeline}
     deps:
-    - ${files.test-set}
+    - ${files.cleaned-test-set}
     - ${files.doc-store}
     - scripts/run_rag_pipeline.py
     outs: 

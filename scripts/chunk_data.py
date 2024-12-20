@@ -25,6 +25,7 @@ def chunk_metadata_value(
             "field": metada_value["field"],
             "id": metada_value["id"],
             "index": i,
+            "dataset": metada_value["dataset"],
         }
         for i in range(len(chunks))
     ]

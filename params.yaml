@@ -13,6 +13,7 @@ files:
   embeddings: data/embeddings.json
   doc-store: data/chroma-data
   test-set: data/eidc_rag_testset.csv
+  cleaned-test-set: data/cleaned_testset.csv
   eval-set: data/evaluation_data.csv
   metrics: data/metrics.json
   results: data/results.csv

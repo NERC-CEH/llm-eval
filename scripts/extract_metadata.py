@@ -13,6 +13,7 @@ def extact_eidc_metadata_fields(
         if json_data[field]:
             metadata = {}
             metadata["id"] = json_data["identifier"]
+            metadata["dataset"] = json_data["title"]
             metadata["field"] = field
             metadata["value"] = json_data[field]
             metadatas.append(metadata)
