@@ -17,4 +17,5 @@
 /eidc_rag_test_set.csv
 /rag-pipeline.yml
 /pipeline.yml
+/results.csv
 /cleaned_testset.csv

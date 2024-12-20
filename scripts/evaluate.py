@@ -22,7 +22,7 @@ from ragas.metrics import (
 from ragas.run_config import RunConfig
 
 
-def main(eval_dataset: str, metric_output: str, image_output: str) -> None:
+def main(eval_dataset: str, metric_output: str, image_output: str, results_output: str) -> None:
     nest_asyncio.apply()  # apply the event loop async fix
     df = pd.read_csv(eval_dataset, converters={"contexts": pd.eval})
     eval_dataset = Dataset.from_pandas(df)
@@ -45,7 +45,7 @@ def main(eval_dataset: str, metric_output: str, image_output: str) -> None:
         run_config=RunConfig(max_workers=1),
     )
     result_df = result.to_pandas()
-
+    result_df.to_csv(results_output, index=False)
     Path(metric_output).parent.mkdir(parents=True, exist_ok=True)
     with open(metric_output, "w+") as f:
         json.dump(result, f)
@@ -88,5 +88,11 @@ if __name__ == "__main__":
         help="File to save image plot to.",
         default="data/evaluation.png",
     )
+    parser.add_argument(
+        "-r",
+        "--results",
+        help="File to save evaluation results",
+        default="data/results.csv",
+    )
     args = parser.parse_args()
-    main(args.eval_dataset, args.metrics_output, args.image_output)
+    main(args.eval_dataset, args.metrics_output, args.image_output, args.results)

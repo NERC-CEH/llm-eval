@@ -11,6 +11,7 @@ from haystack.components.builders.answer_builder import AnswerBuilder
 from haystack_integrations.components.generators.ollama.generator import OllamaGenerator
 from haystack_integrations.components.retrievers.chroma import ChromaQueryTextRetriever
 from haystack_integrations.document_stores.chroma import ChromaDocumentStore
+from tqdm import tqdm
 
 TMP_DOC_PATH = ".tmp/doc-store"
 
@@ -93,12 +94,17 @@ def run_query(query: str, pipeline: Pipeline) -> Dict[str, Any]:
 def query_pipeline(questions: List[str], rag_pipe: Pipeline) -> Tuple[str, List[str]]:
     answers = []
     contexts = []
-    for q in questions:
-        response = run_query(q, rag_pipe)
-        answers.append(response["answer_builder"]["answers"][0].data)
-        contexts.append(
-            [doc.content for doc in response["answer_builder"]["answers"][0].documents]
-        )
+    for q in tqdm(questions):
+        try:
+            response = run_query(q, rag_pipe)
+            answers.append(response["answer_builder"]["answers"][0].data)
+            contexts.append(
+                [doc.content for doc in response["answer_builder"]["answers"][0].documents]
+            )
+        except Exception as e:
+            print(str(e))
+            answers.append("Error")
+            contexts.append([])
     return answers, contexts
 
 
